@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% from "_macros.html" import result, change, dir %}
+{% block title %}Predictions · Stock Predictions{% endblock %}
+{% block content %}
+<h1>Predictions</h1>
+<p class="sub">
+  {{ summary.n }} {{ horizon }} calls{% if made_on %} made on {{ made_on }}{% endif %}:
+  ▲ {{ summary.up }} up, ▼ {{ summary.n - summary.up }} down.
+  {% if summary.scored %}<strong>{{ summary.hits }} of {{ summary.scored }} right ({{ (summary.hits / summary.scored)|pct }})</strong>.{% else %}Not scored yet.{% endif %}
+</p>
+
+<form class="filters" method="get">
+  <select name="horizon" onchange="this.form.made_on.value=''; this.form.submit()">
+    <option value="daily" {{ 'selected' if horizon == 'daily' }}>Daily</option>
+    <option value="weekly" {{ 'selected' if horizon == 'weekly' }}>Weekly</option>
+  </select>
+  <select name="made_on" onchange="this.form.submit()">
+    {% for d in dates %}<option value="{{ d }}" {{ 'selected' if d == made_on }}>{{ d }}</option>{% endfor %}
+  </select>
+  <select name="universe" onchange="this.form.submit()">
+    <option value="">All markets</option>
+    {% for k, v in universes.items() %}<option value="{{ k }}" {{ 'selected' if k == universe }}>{{ v }}</option>{% endfor %}
+  </select>
+  <select name="result" onchange="this.form.submit()">
+    <option value="">All results</option>
+    {% for k in ['correct', 'wrong', 'pending'] %}<option value="{{ k }}" {{ 'selected' if k == result }}>{{ k|capitalize }}</option>{% endfor %}
+  </select>
+  <input id="filter" placeholder="Filter by ticker or name" oninput="filterRows(this.value)">
+  <button type="button" onclick="loadLive(this)" title="Fetch current prices from Yahoo Finance (about 15 minutes delayed)">Load live prices</button>
+</form>
+
+{% if rows %}
+<div class="card table-wrap">
+<table id="preds">
+  <thead><tr>
+    <th>Ticker</th><th>Name</th><th>Call</th><th class="num">Conf.</th><th class="num">Expected</th>
+    <th class="num">Base close</th><th class="num">Close / live</th><th class="num">Change</th><th>Result</th>
+    {% if horizon == 'weekly' %}<th>Target day</th>{% endif %}<th>Why</th>
+  </tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr data-symbol="{{ r.symbol }}" data-base="{{ r.base_close }}" data-dir="{{ r.direction }}" data-final="{{ 1 if r.correct is not none else 0 }}">
+      <td><a href="/ticker/{{ r.symbol }}">{{ r.symbol }}</a></td>
+      <td>{{ r.name }}</td>
+      <td>{{ dir(r.direction) }}</td>
+      <td class="num">{{ '%.0f'|format(r.confidence * 100) }}%</td>
+      <td class="num">{{ change(r.expected_move_pct) }}</td>
+      <td class="num">{{ '%.2f'|format(r.base_close) }}</td>
+      <td class="num live">{% if r.actual_close %}{{ '%.2f'|format(r.actual_close) }}{% elif r.tracking_pct is defined %}{{ '%.2f'|format(r.latest_close) }}{% else %}<span class="muted">–</span>{% endif %}</td>
+      <td class="num chg">{{ change(r.actual_change_pct if r.actual_change_pct is not none else r.tracking_pct) }}</td>
+      <td class="res">{{ result(r) }}</td>
+      {% if horizon == 'weekly' %}<td>{{ r.target_date }}</td>{% endif %}
+      <td class="why">{{ r.rationale }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="card empty">No predictions for this selection.</div>
+{% endif %}
+
+<script>
+function filterRows(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('#preds tbody tr').forEach(tr => {
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+async function loadLive(btn) {
+  const rows = [...document.querySelectorAll('#preds tbody tr')].filter(r => r.dataset.final === '0');
+  if (!rows.length) { btn.textContent = 'All calls are final'; return; }
+  btn.disabled = true; btn.textContent = 'Loading…';
+  try {
+    const syms = rows.map(r => r.dataset.symbol).join(',');
+    const data = await (await fetch('/api/live?symbols=' + encodeURIComponent(syms))).json();
+    let n = 0;
+    rows.forEach(r => {
+      const d = data[r.dataset.symbol]; if (!d) return;
+      n++;
+      const chg = (d.price / parseFloat(r.dataset.base) - 1) * 100;
+      const on = (chg > 0) === (r.dataset.dir === 'UP');
+      r.querySelector('.live').textContent = d.price.toFixed(2);
+      r.querySelector('.chg').innerHTML = `<span class="${chg > 0 ? 'pos' : 'neg'}">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</span>`;
+      r.querySelector('.res').innerHTML = `<span class="pill ${on ? 'ok' : 'bad'}" title="Live, not final">live ${on ? '✓' : '✗'}</span>`;
+    });
+    btn.textContent = `Live prices loaded (${n})`;
+  } catch (e) {
+    btn.textContent = 'Live prices failed';
+  } finally { btn.disabled = false; }
+}
+</script>
+{% endblock %}

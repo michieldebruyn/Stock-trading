@@ -1,0 +1,173 @@
+# Stock Predictions
+
+Every trading morning Claude predicts whether each stock will close **up or down**, for today
+(**daily**) and for the whole week (**weekly**, made on Monday). Every evening the app checks those
+calls against the real closing prices. A local website shows the predictions, live prices and
+how accurate Claude has been.
+
+Markets covered: **S&P 500**, **~50 of Europe's largest stocks** and the **BEL20**.
+
+> This is a learning and tracking tool, not financial advice. Short-term price direction is
+> close to a coin flip; the accuracy page tells you honestly whether there is any edge.
+
+## How it works
+
+```
+07:30  predict   ─ download prices (Yahoo Finance) → compute indicators → ask Claude
+                   in batches of 40 tickers → store calls in `predictions`
+22:45  evaluate  ─ download closing prices → score every call whose target day has closed
+                   → store results in `evaluations`
+any    website   ─ http://localhost:8000: dashboard, predictions, ticker charts, accuracy
+```
+
+- **Daily call**: will today's close be above yesterday's close?
+- **Weekly call**: will the last close of this week be above last week's final close?
+  Made on the first trading day of the week only.
+- Calls are only made **before a market opens** (European markets open 09:00 CET, NYSE 15:30
+  CET), so no call is made with knowledge of the session it predicts. Each exchange's holidays
+  are respected (`pandas_market_calendars`).
+- Claude gets per stock: trailing returns, RSI, MACD, moving-average gaps, ATR, volume, distance
+  from the 52-week high and its own recent hit record on that stock. It also gets the overnight
+  backdrop (US futures, Asia, VIX, rates, FX, oil) and a summary of its own past accuracy and
+  calibration, so it can correct biases.
+- Each call stores direction, confidence (0.50–0.95), expected % move and a one-line rationale.
+
+## Setup
+
+Requires Python 3.11+ and an Anthropic API key.
+
+```bash
+python -m venv .venv
+```
+
+```bash
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+```
+
+```bash
+pip install -r requirements.txt
+```
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...   # Windows PowerShell: $env:ANTHROPIC_API_KEY="sk-ant-..."
+```
+
+Download the S&P 500 list and load all universes into the database:
+
+```bash
+python -m app.universe refresh
+```
+
+Backfill price history (needed for the 200-day average):
+
+```bash
+python -m app.prices --years 2
+```
+
+## Running
+
+The easiest way is one process that serves the website **and** runs both jobs on schedule:
+
+```bash
+python -m app.serve
+```
+
+Open <http://localhost:8000>. Leave it running; the morning and evening jobs fire at the times in
+`config.yaml` (Mon–Fri). If your computer was asleep, a missed job runs when it wakes up, and the
+morning job skips any market that has already opened.
+
+Run the jobs by hand:
+
+```bash
+python -m app.predict --dry-run    # show what would be sent, no API call
+```
+
+```bash
+python -m app.predict
+```
+
+```bash
+python -m app.evaluate
+```
+
+Prefer cron instead of the built-in scheduler? Start the site with
+`python -m app.serve --no-scheduler` and add (adjust the path):
+
+```bash
+30 7  * * 1-5  cd ~/Stock-trading && .venv/bin/python -m app.predict  >> logs/predict.log 2>&1
+45 22 * * 1-5  cd ~/Stock-trading && .venv/bin/python -m app.evaluate >> logs/evaluate.log 2>&1
+```
+
+### Try the website with fake data first
+
+```bash
+python scripts/seed_demo.py
+```
+
+```bash
+STOCKS_DB=data/demo.db python -m app.serve --no-scheduler
+```
+
+This builds `data/demo.db` with synthetic prices and random calls. Your real `data/stocks.db` is
+never touched.
+
+## Website
+
+| Page | Shows |
+|---|---|
+| **Dashboard** | Overall daily/weekly accuracy, per-market cards (up/down split of today's calls, hit rates), Claude's market view, today's highest-confidence calls |
+| **Predictions** | Every call for a date, filterable by market and result, with a **Load live prices** button that shows whether each open call is on track right now |
+| **Ticker** (search box) | 6-month price chart with every call marked ▲/▼ in green (right) or red (wrong), today's intraday price against the base close, full daily and weekly history with rationales |
+| **Accuracy** | Hit rate by market and horizon, rolling hit rate vs the 50% coin flip, calibration chart (does "70% confident" mean right 70% of the time?), most/least predictable stocks |
+
+## Configuration (`config.yaml`)
+
+- `universes`: which lists to predict. Edit `data/universe/bel20.csv` / `europe.csv` to change
+  constituents (the BEL20 is reviewed every quarter; check it now and then).
+- `schedule`: job times in `timezone`.
+- `claude.model`, `claude.effort`: `claude-opus-5-5` at `medium` by default. `low` is cheaper,
+  `high` reasons more.
+- `claude.batch_size`, `claude.max_parallel`: tickers per request and concurrent requests.
+
+## Cost
+
+About 575 tickers. With Claude Opus 5.5 at `medium` effort, expect roughly **$1–3 per trading
+day** (more on Mondays, when weekly calls are added): about $25–60 a month. The **Dashboard**
+shows the token usage of the last run. Reduce cost with `effort: low`, or by dropping a universe.
+
+## Database
+
+SQLite at `data/stocks.db` (open it with any SQLite browser).
+
+| Table | Contents |
+|---|---|
+| `tickers`, `ticker_universes` | Symbols, names, exchange, and which universe(s) each belongs to |
+| `prices` | Daily OHLCV (split/dividend adjusted) for tickers and market-context symbols |
+| `predictions` | One row per call: horizon, target date, base close, direction, confidence, expected move, rationale. Written once in the morning, never changed |
+| `evaluations` | Actual close, % change, actual direction, right/wrong |
+| `runs` | Each job run: status, token usage, Claude's market view, errors |
+
+## Project layout
+
+```
+app/
+  config.py, db.py          config + schema
+  universe.py               S&P 500 download, CSV lists → DB
+  market.py                 exchange calendars, opening times
+  prices.py                 Yahoo Finance download, intraday quotes
+  features.py               technical indicators
+  claude_predictor.py       prompt, structured-output schema, API call
+  predict.py                morning job
+  evaluate.py               evening job
+  stats.py                  accuracy / calibration queries
+  serve.py                  website + scheduler
+  web/                      FastAPI app, templates, Chart.js
+scripts/seed_demo.py        demo database
+tests/                      offline tests (pytest)
+```
+
+## Tests
+
+```bash
+python -m pytest -q
+```

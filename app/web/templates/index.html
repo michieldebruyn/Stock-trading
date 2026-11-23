@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% from "_macros.html" import result, change, dir %}
+{% block content %}
+<h1>Dashboard</h1>
+<p class="sub">
+  {{ n_tickers }} tickers tracked.
+  {% if run %}Last prediction run {{ run.run_date }}: <strong>{{ run.status }}</strong>, {{ run.n_items }} predictions
+  ({{ '{:,}'.format(run.input_tokens or 0) }} input / {{ '{:,}'.format(run.output_tokens or 0) }} output tokens).{% else %}No prediction runs yet.{% endif %}
+  {% if last_eval %}Last evaluation {{ last_eval.run_date }}: {{ last_eval.n_items }} scored.{% endif %}
+</p>
+
+{% if not run %}
+<div class="card empty">
+  Nothing here yet. Run <code>python -m app.predict</code> in the morning and <code>python -m app.evaluate</code>
+  in the evening, or start <code>python -m app.serve</code> to run both on schedule.
+</div>
+{% endif %}
+
+<div class="grid k4">
+  <div class="card stat">
+    <div class="label">Daily accuracy · last 30 days</div>
+    <div class="value">{{ overall.daily30.rate|pct }}</div>
+    <div class="foot">{{ overall.daily30.hits }} of {{ overall.daily30.n }} calls right · 50% is a coin flip</div>
+  </div>
+  <div class="card stat">
+    <div class="label">Weekly accuracy · last 90 days</div>
+    <div class="value">{{ overall.weekly90.rate|pct }}</div>
+    <div class="foot">{{ overall.weekly90.hits }} of {{ overall.weekly90.n }} calls right</div>
+  </div>
+  <div class="card stat">
+    <div class="label">Daily accuracy · all time</div>
+    <div class="value">{{ overall.daily_all.rate|pct }}</div>
+    <div class="foot">{{ overall.daily_all.n }} scored calls</div>
+  </div>
+  <div class="card stat">
+    <div class="label">Weekly accuracy · all time</div>
+    <div class="value">{{ overall.weekly_all.rate|pct }}</div>
+    <div class="foot">{{ overall.weekly_all.n }} scored calls</div>
+  </div>
+</div>
+
+<div class="grid k3 section">
+  {% for c in cards %}
+  {% set b = breadth.get(c.key) %}
+  <div class="card">
+    <div class="uni-head"><h2>{{ c.label }}</h2><span class="muted">{{ c.n_tickers }} stocks</span></div>
+    {% if b %}
+      {% set total = (b.up or 0) + (b.down or 0) %}
+      <div class="muted" style="font-size:12px">Daily calls for {{ latest_daily }}</div>
+      <div class="bar" role="img" aria-label="{{ b.up }} up, {{ b.down }} down">
+        <div class="up" style="flex: {{ b.up or 0 }}"></div><div class="down" style="flex: {{ b.down or 0 }}"></div>
+      </div>
+      <div class="kv"><span>▲ {{ b.up }} up · ▼ {{ b.down }} down</span>
+        <span>{% if b.scored %}{{ b.hits }}/{{ b.scored }} right{% else %}not scored yet{% endif %}</span></div>
+    {% endif %}
+    <div class="kv"><span>Daily, 30 days</span><span>{{ c.daily30.rate|pct }} <span class="muted">(n={{ c.daily30.n }})</span></span></div>
+    <div class="kv"><span>Weekly, 90 days</span><span>{{ c.weekly90.rate|pct }} <span class="muted">(n={{ c.weekly90.n }})</span></span></div>
+    <div class="kv"><span></span><a href="/predictions?universe={{ c.key }}">View calls →</a></div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if run and run.market_view %}
+<div class="card section">
+  <h2>Claude's market view · {{ run.run_date }}</h2>
+  <div class="view">{{ run.market_view }}</div>
+</div>
+{% endif %}
+
+{% if top %}
+<div class="card section">
+  <h2>Highest-confidence daily calls · {{ latest_daily }}</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Ticker</th><th>Name</th><th>Call</th><th class="num">Confidence</th>
+      <th class="num">Expected</th><th class="num">Actual</th><th>Result</th><th>Why</th></tr></thead>
+    <tbody>
+    {% for r in top %}
+      <tr>
+        <td><a href="/ticker/{{ r.symbol }}">{{ r.symbol }}</a></td>
+        <td>{{ r.name }}</td>
+        <td>{{ dir(r.direction) }}</td>
+        <td class="num">{{ '%.0f'|format(r.confidence * 100) }}%</td>
+        <td class="num">{{ change(r.expected_move_pct) }}</td>
+        <td class="num">{{ change(r.actual_change_pct if r.actual_change_pct is not none else r.tracking_pct) }}</td>
+        <td>{{ result(r) }}</td>
+        <td class="why">{{ r.rationale }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endif %}
+{% endblock %}

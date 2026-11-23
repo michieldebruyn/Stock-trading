@@ -1,0 +1,40 @@
+# Stock prediction app configuration.
+# Times are in `timezone`. Change them if you are not in Central European Time.
+
+timezone: Europe/Brussels
+
+database: data/stocks.db
+
+# Which universes to predict. Lists live in data/universe/*.csv
+# (sp500.csv is downloaded with:  python -m app.universe refresh)
+universes:
+  - sp500
+  - europe
+  - bel20
+
+schedule:
+  morning: "07:30"   # before Euronext/Xetra/LSE open (09:00 CET) and NYSE (15:30 CET)
+  evening: "22:45"   # after NYSE close (22:00 CET) so all markets have a closing price
+
+claude:
+  model: claude-opus-5-5
+  effort: medium        # low | medium | high | xhigh | max  (higher = better reasoning, more cost)
+  batch_size: 40        # tickers per API request
+  max_parallel: 4       # concurrent API requests
+  server_fallback: true # retry on a fallback model if a request is declined
+
+# Market context sent with every request (indices, futures, FX, volatility)
+context_symbols:
+  "^GSPC": S&P 500
+  "ES=F": S&P 500 futures
+  "^IXIC": Nasdaq Composite
+  "^VIX": VIX volatility
+  "^STOXX50E": Euro Stoxx 50
+  "^GDAXI": DAX
+  "^FTSE": FTSE 100
+  "^BFX": BEL 20
+  "^N225": Nikkei 225
+  "^HSI": Hang Seng
+  "EURUSD=X": EUR/USD
+  "CL=F": Crude oil
+  "^TNX": US 10Y yield

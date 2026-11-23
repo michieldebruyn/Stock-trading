@@ -1,0 +1,54 @@
+symbol,name,sector
+ASML.AS,ASML Holding,Information Technology
+SAP.DE,SAP,Information Technology
+NOVO-B.CO,Novo Nordisk,Health Care
+NESN.SW,Nestle,Consumer Staples
+ROG.SW,Roche,Health Care
+NOVN.SW,Novartis,Health Care
+MC.PA,LVMH,Consumer Discretionary
+AZN.L,AstraZeneca,Health Care
+SHEL.L,Shell,Energy
+HSBA.L,HSBC,Financials
+RMS.PA,Hermes,Consumer Discretionary
+OR.PA,L'Oreal,Consumer Staples
+SIE.DE,Siemens,Industrials
+TTE.PA,TotalEnergies,Energy
+ALV.DE,Allianz,Financials
+SAN.PA,Sanofi,Health Care
+ULVR.L,Unilever,Consumer Staples
+SU.PA,Schneider Electric,Industrials
+AIR.PA,Airbus,Industrials
+DTE.DE,Deutsche Telekom,Communication Services
+ITX.MC,Inditex,Consumer Discretionary
+SAN.MC,Banco Santander,Financials
+IBE.MC,Iberdrola,Utilities
+BBVA.MC,BBVA,Financials
+ABBN.SW,ABB,Industrials
+UBSG.SW,UBS Group,Financials
+ZURN.SW,Zurich Insurance,Financials
+CFR.SW,Richemont,Consumer Discretionary
+RACE.MI,Ferrari,Consumer Discretionary
+ENEL.MI,Enel,Utilities
+ISP.MI,Intesa Sanpaolo,Financials
+UCG.MI,UniCredit,Financials
+BP.L,BP,Energy
+GSK.L,GSK,Health Care
+RIO.L,Rio Tinto,Materials
+REL.L,RELX,Industrials
+LSEG.L,London Stock Exchange Group,Financials
+BATS.L,British American Tobacco,Consumer Staples
+DGE.L,Diageo,Consumer Staples
+MUV2.DE,Munich Re,Financials
+RHM.DE,Rheinmetall,Industrials
+EL.PA,EssilorLuxottica,Health Care
+CS.PA,AXA,Financials
+SAF.PA,Safran,Industrials
+BNP.PA,BNP Paribas,Financials
+ABI.BR,AB InBev,Consumer Staples
+ADYEN.AS,Adyen,Financials
+PRX.AS,Prosus,Consumer Discretionary
+INGA.AS,ING Group,Financials
+ATCO-A.ST,Atlas Copco,Industrials
+VOLV-B.ST,Volvo,Industrials
+NDA-FI.HE,Nordea,Financials
+DSV.CO,DSV,Industrials

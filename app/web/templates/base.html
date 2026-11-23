@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Stock Predictions{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/chart.umd.js"></script>
+  <script src="/static/charts.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">Stock Predictions</a>
+  <nav>
+    <a href="/" class="{{ 'on' if page == 'dashboard' }}">Dashboard</a>
+    <a href="/predictions" class="{{ 'on' if page == 'predictions' }}">Predictions</a>
+    <a href="/accuracy" class="{{ 'on' if page == 'accuracy' }}">Accuracy</a>
+  </nav>
+  <form onsubmit="event.preventDefault(); const s=this.q.value.trim().toUpperCase(); if(s) location='/ticker/'+encodeURIComponent(s);">
+    <input name="q" placeholder="Ticker, e.g. AAPL or KBC.BR" aria-label="Go to ticker">
+  </form>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Accuracy · Stock Predictions{% endblock %}
+{% block content %}
+<h1>Accuracy</h1>
+<p class="sub">How often Claude's direction calls were right over the last {{ days }} days. 50% is what a coin flip gets.</p>
+
+<form class="filters" method="get">
+  <select name="days" onchange="this.form.submit()">
+    {% for d in [30, 90, 180, 365, 3650] %}<option value="{{ d }}" {{ 'selected' if d == days }}>{{ 'All time' if d == 3650 else 'Last ' ~ d ~ ' days' }}</option>{% endfor %}
+  </select>
+</form>
+
+<div class="card table-wrap">
+  <table>
+    <thead><tr><th>Horizon</th><th class="num">All markets</th>
+      {% for k, v in universes.items() %}<th class="num">{{ v }}</th>{% endfor %}
+      <th class="num">Avg confidence</th><th class="num">Called UP</th><th class="num">Actually UP</th></tr></thead>
+    <tbody>
+    {% for row in table %}
+      <tr>
+        <td>{{ row.horizon|capitalize }}</td>
+        <td class="num"><strong>{{ row.all.rate|pct }}</strong> <span class="muted">n={{ row.all.n }}</span></td>
+        {% for k in universes %}<td class="num">{{ row[k].rate|pct }} <span class="muted">n={{ row[k].n }}</span></td>{% endfor %}
+        <td class="num">{{ row.all.avg_conf|pct }}</td>
+        <td class="num">{{ row.all.up_share|pct }}</td>
+        <td class="num">{{ row.all.actual_up|pct }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% for horizon in ['daily', 'weekly'] %}
+<div class="grid k2 section">
+  <div class="card">
+    <h2>{{ horizon|capitalize }} hit rate, rolling {{ '10 days' if horizon == 'daily' else '4 weeks' }}</h2>
+    <div class="legend">
+      <span><i style="background:var(--series-1)"></i>S&amp;P 500</span>
+      <span><i style="background:var(--series-2)"></i>Europe large caps</span>
+      <span><i style="background:var(--series-3)"></i>BEL20</span>
+      <span><i style="background:var(--muted)"></i>Coin flip (50%)</span>
+    </div>
+    <div class="chart-box"><canvas id="line-{{ horizon }}"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>{{ horizon|capitalize }} calibration</h2>
+    <div class="legend"><span>Dots on the dashed line mean the stated confidence matches reality. Dot size = number of calls.</span></div>
+    <div class="chart-box"><canvas id="calib-{{ horizon }}"></canvas></div>
+  </div>
+</div>
+{% endfor %}
+
+{% if best %}
+<div class="grid k2 section">
+  <div class="card">
+    <h2>Most predictable stocks (daily, at least 5 calls)</h2>
+    <table><thead><tr><th>Ticker</th><th>Name</th><th class="num">Right</th><th class="num">Calls</th></tr></thead>
+      <tbody>{% for r in best %}<tr><td><a href="/ticker/{{ r.symbol }}">{{ r.symbol }}</a></td><td>{{ r.name }}</td>
+        <td class="num">{{ r.rate|pct }}</td><td class="num">{{ r.n }}</td></tr>{% endfor %}</tbody></table>
+  </div>
+  {% if worst %}
+  <div class="card">
+    <h2>Least predictable stocks</h2>
+    <table><thead><tr><th>Ticker</th><th>Name</th><th class="num">Right</th><th class="num">Calls</th></tr></thead>
+      <tbody>{% for r in worst %}<tr><td><a href="/ticker/{{ r.symbol }}">{{ r.symbol }}</a></td><td>{{ r.name }}</td>
+        <td class="num">{{ r.rate|pct }}</td><td class="num">{{ r.n }}</td></tr>{% endfor %}</tbody></table>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<script>
+  for (const h of ['daily', 'weekly']) {
+    accuracyCharts(document.getElementById('line-' + h), document.getElementById('calib-' + h), h, {{ days }});
+  }
+</script>
+{% endblock %}
