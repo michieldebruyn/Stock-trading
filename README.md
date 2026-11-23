@@ -124,8 +124,10 @@ in the batches because their markets open first; a call for a market that has op
 time is discarded, so no call is made with knowledge of the session it predicts. Calls made this
 way are recorded with the model `claude-sonnet-5-5 (Claude Code)`.
 
-The cloud environment needs network access to Yahoo Finance, Wikipedia (the S&P 500 list) and
-PyPI.
+The cloud environment needs network access to Yahoo Finance and PyPI. The S&P 500 list is kept
+in the repo (`data/universe/sp500.csv`), so Wikipedia is optional: if it can't be reached, the
+saved list is used. To update the saved list, run `python -m app.universe refresh` locally and
+commit the CSV.
 
 To see the cloud results in your local dashboard, pull them into your database and start the
 site without the local scheduler (so it doesn't make its own, conflicting predictions):

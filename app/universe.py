@@ -70,8 +70,14 @@ def sync() -> int:
 def main(argv: list[str]) -> None:
     cmd = argv[0] if argv else "sync"
     if cmd == "refresh":
-        df = download_sp500()
-        print(f"Downloaded {len(df)} S&P 500 constituents")
+        try:
+            df = download_sp500()
+            print(f"Downloaded {len(df)} S&P 500 constituents")
+        except Exception as exc:  # noqa: BLE001 - fall back to the list in the repo
+            if not (UNIVERSE_DIR / "sp500.csv").exists():
+                raise
+            print(f"warning: S&P 500 download failed ({type(exc).__name__}); "
+                  f"using the saved data/universe/sp500.csv", file=sys.stderr)
     print(f"{sync()} active tickers in database")
 
 
