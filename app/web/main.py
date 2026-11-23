@@ -195,7 +195,20 @@ def accuracy_page(request: Request, days: int = 90):
     })
 
 
-# ---------- JSON API used by the charts ----------
+# ---------- JSON API used by the charts and the search box ----------
+
+@app.get("/api/tickers")
+def api_tickers():
+    """All active tickers for the search box, with their universes and latest close."""
+    with connect() as conn:
+        rows = conn.execute(
+            """SELECT t.symbol, t.name, t.sector, t.exchange,
+                      (SELECT GROUP_CONCAT(universe) FROM ticker_universes u WHERE u.symbol = t.symbol) AS unis,
+                      (SELECT close FROM prices p WHERE p.symbol = t.symbol ORDER BY date DESC LIMIT 1) AS close
+               FROM tickers t WHERE t.active = 1 ORDER BY t.name COLLATE NOCASE""").fetchall()
+    return [{"symbol": r["symbol"], "name": r["name"] or r["symbol"], "sector": r["sector"],
+             "universes": [UNIVERSES.get(u, u) for u in (r["unis"] or "").split(",") if u],
+             "close": r["close"]} for r in rows]
 
 @app.get("/api/ticker/{symbol}/history")
 def api_history(symbol: str, days: int = 180):

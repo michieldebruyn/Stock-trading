@@ -271,6 +271,21 @@ def test_state_files_include_prices_and_intraday(db, tmp_path, monkeypatch):
     copy.close()
 
 
+def test_tickers_api_for_search(db):
+    from fastapi.testclient import TestClient
+    from app.web.main import app
+    add_prices(db, "AAPL", "XNYS", date(2026, 11, 2), date(2026, 11, 20))
+    db.execute("INSERT INTO tickers(symbol,name,exchange,sector,active) VALUES ('OLD','Gone','XNYS','x',0)")
+    db.commit()
+    rows = TestClient(app).get("/api/tickers").json()
+    assert [r["symbol"] for r in rows] == ["AAPL", "KBC.BR"]          # active only, sorted by name
+    aapl, kbc = rows
+    assert aapl["universes"] == ["S&P 500"] and kbc["universes"] == ["BEL20"]
+    assert aapl["close"] == db.execute("SELECT close FROM prices WHERE symbol='AAPL' "
+                                       "ORDER BY date DESC LIMIT 1").fetchone()[0]
+    assert kbc["close"] is None
+
+
 def test_website_renders(db):
     from fastapi.testclient import TestClient
     from app.web.main import app

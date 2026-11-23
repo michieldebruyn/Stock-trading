@@ -16,12 +16,15 @@
     <a href="/predictions" class="{{ 'on' if page == 'predictions' }}">Predictions</a>
     <a href="/accuracy" class="{{ 'on' if page == 'accuracy' }}">Accuracy</a>
   </nav>
-  <form onsubmit="event.preventDefault(); const s=this.q.value.trim().toUpperCase(); if(s) location='/ticker/'+encodeURIComponent(s);">
-    <input name="q" placeholder="Ticker, e.g. AAPL or KBC.BR" aria-label="Go to ticker">
+  <form id="ticker-search" class="search" autocomplete="off">
+    <input name="q" placeholder="Search stock or ticker, e.g. KBC or Apple" aria-label="Search stocks"
+           role="combobox" aria-expanded="false" aria-controls="ticker-options" aria-autocomplete="list">
+    <ul id="ticker-options" role="listbox" hidden></ul>
   </form>
 </header>
 <main>
 {% block content %}{% endblock %}
 </main>
+<script src="{{ static_url('search.js') }}"></script>
 </body>
 </html>
