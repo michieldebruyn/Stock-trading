@@ -98,6 +98,37 @@ Prefer cron instead of the built-in scheduler? Start the site with
 45 22 * * 1-5  cd ~/Stock-trading && .venv/bin/python -m app.evaluate >> logs/evaluate.log 2>&1
 ```
 
+### Run the jobs in the cloud (Claude Code routines)
+
+Two Claude Code cloud routines can run the jobs instead of your computer, so it doesn't have to
+be on. A cloud run starts from a fresh checkout, so the app's records (predictions, scores, runs,
+tickers) are kept in Git on the `claude/stock-data` branch as JSON-lines files, one file per
+month for predictions and scores. Prices aren't stored; each run downloads them again.
+
+Each routine runs:
+
+```bash
+pip install -r requirements.txt
+python scripts/state.py pull                     # load the saved records
+python -m app.universe refresh                   # morning only
+python -m app.predict                            # or: python -m app.evaluate
+python scripts/state.py push -m "predict 2026-11-24"
+```
+
+The cloud environment needs `ANTHROPIC_API_KEY` set as an environment variable, and network
+access to Yahoo Finance, Wikipedia (the S&P 500 list), PyPI and the Anthropic API.
+
+To see the cloud results in your local dashboard, pull them into your database and start the
+site without the local scheduler (so it doesn't make its own, conflicting predictions):
+
+```bash
+python scripts/state.py pull
+```
+
+```bash
+python -m app.serve --no-scheduler
+```
+
 ### Try the website with fake data first
 
 ```bash
