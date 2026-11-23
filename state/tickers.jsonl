@@ -1,72 +1,575 @@
+{"active": 1, "exchange": "XNYS", "name": "Agilent Technologies", "sector": "Health Care", "symbol": "A"}
+{"active": 1, "exchange": "XNYS", "name": "Apple Inc.", "sector": "Information Technology", "symbol": "AAPL"}
 {"active": 1, "exchange": "XSWX", "name": "ABB", "sector": "Industrials", "symbol": "ABBN.SW"}
+{"active": 1, "exchange": "XNYS", "name": "AbbVie", "sector": "Health Care", "symbol": "ABBV"}
 {"active": 1, "exchange": "XBRU", "name": "AB InBev", "sector": "Consumer Staples", "symbol": "ABI.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Airbnb", "sector": "Consumer Discretionary", "symbol": "ABNB"}
+{"active": 1, "exchange": "XNYS", "name": "Abbott Laboratories", "sector": "Health Care", "symbol": "ABT"}
+{"active": 1, "exchange": "XNYS", "name": "Arch Capital Group", "sector": "Financials", "symbol": "ACGL"}
 {"active": 1, "exchange": "XBRU", "name": "Ackermans & van Haaren", "sector": "Financials", "symbol": "ACKB.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Accenture", "sector": "Information Technology", "symbol": "ACN"}
+{"active": 1, "exchange": "XNYS", "name": "Adobe Inc.", "sector": "Information Technology", "symbol": "ADBE"}
+{"active": 1, "exchange": "XNYS", "name": "Analog Devices", "sector": "Information Technology", "symbol": "ADI"}
+{"active": 1, "exchange": "XNYS", "name": "Archer Daniels Midland", "sector": "Consumer Staples", "symbol": "ADM"}
+{"active": 1, "exchange": "XNYS", "name": "Automatic Data Processing", "sector": "Industrials", "symbol": "ADP"}
+{"active": 1, "exchange": "XNYS", "name": "Autodesk", "sector": "Information Technology", "symbol": "ADSK"}
 {"active": 1, "exchange": "XAMS", "name": "Adyen", "sector": "Financials", "symbol": "ADYEN.AS"}
 {"active": 1, "exchange": "XBRU", "name": "Aedifica", "sector": "Real Estate", "symbol": "AED.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Ameren", "sector": "Utilities", "symbol": "AEE"}
+{"active": 1, "exchange": "XNYS", "name": "American Electric Power", "sector": "Utilities", "symbol": "AEP"}
+{"active": 1, "exchange": "XNYS", "name": "AES Corporation", "sector": "Utilities", "symbol": "AES"}
+{"active": 1, "exchange": "XNYS", "name": "Aflac", "sector": "Financials", "symbol": "AFL"}
 {"active": 1, "exchange": "XBRU", "name": "Ageas", "sector": "Financials", "symbol": "AGS.BR"}
+{"active": 1, "exchange": "XNYS", "name": "American International Group", "sector": "Financials", "symbol": "AIG"}
 {"active": 1, "exchange": "XPAR", "name": "Airbus", "sector": "Industrials", "symbol": "AIR.PA"}
+{"active": 1, "exchange": "XNYS", "name": "Assurant", "sector": "Financials", "symbol": "AIZ"}
+{"active": 1, "exchange": "XNYS", "name": "Arthur J. Gallagher & Co.", "sector": "Financials", "symbol": "AJG"}
+{"active": 1, "exchange": "XNYS", "name": "Akamai Technologies", "sector": "Information Technology", "symbol": "AKAM"}
+{"active": 1, "exchange": "XNYS", "name": "Albemarle Corporation", "sector": "Materials", "symbol": "ALB"}
+{"active": 1, "exchange": "XNYS", "name": "Align Technology", "sector": "Health Care", "symbol": "ALGN"}
+{"active": 1, "exchange": "XNYS", "name": "Allstate", "sector": "Financials", "symbol": "ALL"}
+{"active": 1, "exchange": "XNYS", "name": "Allegion", "sector": "Industrials", "symbol": "ALLE"}
 {"active": 1, "exchange": "XETR", "name": "Allianz", "sector": "Financials", "symbol": "ALV.DE"}
+{"active": 1, "exchange": "XNYS", "name": "Applied Materials", "sector": "Information Technology", "symbol": "AMAT"}
+{"active": 1, "exchange": "XNYS", "name": "Amcor", "sector": "Materials", "symbol": "AMCR"}
+{"active": 1, "exchange": "XNYS", "name": "Advanced Micro Devices", "sector": "Information Technology", "symbol": "AMD"}
+{"active": 1, "exchange": "XNYS", "name": "Ametek", "sector": "Industrials", "symbol": "AME"}
+{"active": 1, "exchange": "XNYS", "name": "Amgen", "sector": "Health Care", "symbol": "AMGN"}
+{"active": 1, "exchange": "XNYS", "name": "Ameriprise Financial", "sector": "Financials", "symbol": "AMP"}
+{"active": 1, "exchange": "XNYS", "name": "American Tower", "sector": "Real Estate", "symbol": "AMT"}
+{"active": 1, "exchange": "XNYS", "name": "Amazon", "sector": "Consumer Discretionary", "symbol": "AMZN"}
+{"active": 1, "exchange": "XNYS", "name": "Arista Networks", "sector": "Information Technology", "symbol": "ANET"}
+{"active": 1, "exchange": "XNYS", "name": "Aon plc", "sector": "Financials", "symbol": "AON"}
+{"active": 1, "exchange": "XNYS", "name": "A. O. Smith", "sector": "Industrials", "symbol": "AOS"}
+{"active": 1, "exchange": "XNYS", "name": "APA Corporation", "sector": "Energy", "symbol": "APA"}
 {"active": 1, "exchange": "XAMS", "name": "Aperam", "sector": "Materials", "symbol": "APAM.AS"}
+{"active": 1, "exchange": "XNYS", "name": "Air Products", "sector": "Materials", "symbol": "APD"}
+{"active": 1, "exchange": "XNYS", "name": "Amphenol", "sector": "Information Technology", "symbol": "APH"}
+{"active": 1, "exchange": "XNYS", "name": "Apollo Global Management", "sector": "Financials", "symbol": "APO"}
+{"active": 1, "exchange": "XNYS", "name": "AppLovin", "sector": "Communication Services", "symbol": "APP"}
+{"active": 1, "exchange": "XNYS", "name": "Aptiv", "sector": "Consumer Discretionary", "symbol": "APTV"}
+{"active": 1, "exchange": "XNYS", "name": "Alexandria Real Estate Equities", "sector": "Real Estate", "symbol": "ARE"}
+{"active": 1, "exchange": "XNYS", "name": "Ares Management", "sector": "Financials", "symbol": "ARES"}
 {"active": 1, "exchange": "XBRU", "name": "argenx", "sector": "Health Care", "symbol": "ARGX.BR"}
 {"active": 1, "exchange": "XAMS", "name": "ASML Holding", "sector": "Information Technology", "symbol": "ASML.AS"}
 {"active": 1, "exchange": "XSTO", "name": "Atlas Copco", "sector": "Industrials", "symbol": "ATCO-A.ST"}
+{"active": 1, "exchange": "XNYS", "name": "Atmos Energy", "sector": "Utilities", "symbol": "ATO"}
+{"active": 1, "exchange": "XNYS", "name": "Broadcom", "sector": "Information Technology", "symbol": "AVGO"}
+{"active": 1, "exchange": "XNYS", "name": "Avery Dennison", "sector": "Materials", "symbol": "AVY"}
+{"active": 1, "exchange": "XNYS", "name": "American Water Works", "sector": "Utilities", "symbol": "AWK"}
+{"active": 1, "exchange": "XNYS", "name": "Axon Enterprise", "sector": "Industrials", "symbol": "AXON"}
+{"active": 1, "exchange": "XNYS", "name": "American Express", "sector": "Financials", "symbol": "AXP"}
 {"active": 1, "exchange": "XBRU", "name": "Azelis", "sector": "Industrials", "symbol": "AZE.BR"}
 {"active": 1, "exchange": "XLON", "name": "AstraZeneca", "sector": "Health Care", "symbol": "AZN.L"}
+{"active": 1, "exchange": "XNYS", "name": "AutoZone", "sector": "Consumer Discretionary", "symbol": "AZO"}
+{"active": 1, "exchange": "XNYS", "name": "Boeing", "sector": "Industrials", "symbol": "BA"}
+{"active": 1, "exchange": "XNYS", "name": "Bank of America", "sector": "Financials", "symbol": "BAC"}
+{"active": 1, "exchange": "XNYS", "name": "Ball Corporation", "sector": "Materials", "symbol": "BALL"}
 {"active": 1, "exchange": "XLON", "name": "British American Tobacco", "sector": "Consumer Staples", "symbol": "BATS.L"}
+{"active": 1, "exchange": "XNYS", "name": "Baxter International", "sector": "Health Care", "symbol": "BAX"}
 {"active": 1, "exchange": "XMAD", "name": "BBVA", "sector": "Financials", "symbol": "BBVA.MC"}
+{"active": 1, "exchange": "XNYS", "name": "Best Buy", "sector": "Consumer Discretionary", "symbol": "BBY"}
+{"active": 1, "exchange": "XNYS", "name": "Becton Dickinson", "sector": "Health Care", "symbol": "BDX"}
+{"active": 1, "exchange": "XNYS", "name": "Bloom Energy", "sector": "Industrials", "symbol": "BE"}
+{"active": 1, "exchange": "XNYS", "name": "Franklin Resources", "sector": "Financials", "symbol": "BEN"}
+{"active": 1, "exchange": "XNYS", "name": "Brown–Forman", "sector": "Consumer Staples", "symbol": "BF-B"}
+{"active": 1, "exchange": "XNYS", "name": "Bunge Global", "sector": "Consumer Staples", "symbol": "BG"}
+{"active": 1, "exchange": "XNYS", "name": "Biogen", "sector": "Health Care", "symbol": "BIIB"}
+{"active": 1, "exchange": "XNYS", "name": "Booking Holdings", "sector": "Consumer Discretionary", "symbol": "BKNG"}
+{"active": 1, "exchange": "XNYS", "name": "Baker Hughes", "sector": "Energy", "symbol": "BKR"}
+{"active": 1, "exchange": "XNYS", "name": "BlackRock", "sector": "Financials", "symbol": "BLK"}
+{"active": 1, "exchange": "XNYS", "name": "Bristol Myers Squibb", "sector": "Health Care", "symbol": "BMY"}
 {"active": 1, "exchange": "XPAR", "name": "BNP Paribas", "sector": "Financials", "symbol": "BNP.PA"}
+{"active": 1, "exchange": "XNYS", "name": "BNY Mellon", "sector": "Financials", "symbol": "BNY"}
 {"active": 1, "exchange": "XLON", "name": "BP", "sector": "Energy", "symbol": "BP.L"}
+{"active": 1, "exchange": "XNYS", "name": "Broadridge Financial Solutions", "sector": "Industrials", "symbol": "BR"}
+{"active": 1, "exchange": "XNYS", "name": "Berkshire Hathaway", "sector": "Financials", "symbol": "BRK-B"}
+{"active": 1, "exchange": "XNYS", "name": "Brown & Brown", "sector": "Financials", "symbol": "BRO"}
+{"active": 1, "exchange": "XNYS", "name": "Boston Scientific", "sector": "Health Care", "symbol": "BSX"}
+{"active": 1, "exchange": "XNYS", "name": "Blackstone Inc.", "sector": "Financials", "symbol": "BX"}
+{"active": 1, "exchange": "XNYS", "name": "BXP, Inc.", "sector": "Real Estate", "symbol": "BXP"}
+{"active": 1, "exchange": "XNYS", "name": "Citigroup", "sector": "Financials", "symbol": "C"}
+{"active": 1, "exchange": "XNYS", "name": "Cardinal Health", "sector": "Health Care", "symbol": "CAH"}
+{"active": 1, "exchange": "XNYS", "name": "Carrier Global", "sector": "Industrials", "symbol": "CARR"}
+{"active": 1, "exchange": "XNYS", "name": "Casey's", "sector": "Consumer Staples", "symbol": "CASY"}
+{"active": 1, "exchange": "XNYS", "name": "Caterpillar Inc.", "sector": "Industrials", "symbol": "CAT"}
+{"active": 1, "exchange": "XNYS", "name": "Chubb Limited", "sector": "Financials", "symbol": "CB"}
+{"active": 1, "exchange": "XNYS", "name": "Cboe Global Markets", "sector": "Financials", "symbol": "CBOE"}
+{"active": 1, "exchange": "XNYS", "name": "CBRE Group", "sector": "Real Estate", "symbol": "CBRE"}
+{"active": 1, "exchange": "XNYS", "name": "Crown Castle", "sector": "Real Estate", "symbol": "CCI"}
+{"active": 1, "exchange": "XNYS", "name": "Carnival Corporation", "sector": "Consumer Discretionary", "symbol": "CCL"}
+{"active": 1, "exchange": "XNYS", "name": "Cadence Design Systems", "sector": "Information Technology", "symbol": "CDNS"}
+{"active": 1, "exchange": "XNYS", "name": "CDW Corporation", "sector": "Information Technology", "symbol": "CDW"}
+{"active": 1, "exchange": "XNYS", "name": "Constellation Energy", "sector": "Utilities", "symbol": "CEG"}
+{"active": 1, "exchange": "XNYS", "name": "CF Industries", "sector": "Materials", "symbol": "CF"}
+{"active": 1, "exchange": "XNYS", "name": "Citizens Financial Group", "sector": "Financials", "symbol": "CFG"}
 {"active": 1, "exchange": "XSWX", "name": "Richemont", "sector": "Consumer Discretionary", "symbol": "CFR.SW"}
+{"active": 1, "exchange": "XNYS", "name": "Church & Dwight", "sector": "Consumer Staples", "symbol": "CHD"}
+{"active": 1, "exchange": "XNYS", "name": "C.H. Robinson", "sector": "Industrials", "symbol": "CHRW"}
+{"active": 1, "exchange": "XNYS", "name": "Charter Communications", "sector": "Communication Services", "symbol": "CHTR"}
+{"active": 1, "exchange": "XNYS", "name": "Cigna", "sector": "Health Care", "symbol": "CI"}
+{"active": 1, "exchange": "XNYS", "name": "Ciena", "sector": "Information Technology", "symbol": "CIEN"}
+{"active": 1, "exchange": "XNYS", "name": "Cincinnati Financial", "sector": "Financials", "symbol": "CINF"}
+{"active": 1, "exchange": "XNYS", "name": "Colgate-Palmolive", "sector": "Consumer Staples", "symbol": "CL"}
+{"active": 1, "exchange": "XNYS", "name": "Clorox", "sector": "Consumer Staples", "symbol": "CLX"}
+{"active": 1, "exchange": "XNYS", "name": "Comcast", "sector": "Communication Services", "symbol": "CMCSA"}
+{"active": 1, "exchange": "XNYS", "name": "CME Group", "sector": "Financials", "symbol": "CME"}
+{"active": 1, "exchange": "XNYS", "name": "Chipotle Mexican Grill", "sector": "Consumer Discretionary", "symbol": "CMG"}
+{"active": 1, "exchange": "XNYS", "name": "Cummins", "sector": "Industrials", "symbol": "CMI"}
+{"active": 1, "exchange": "XNYS", "name": "CMS Energy", "sector": "Utilities", "symbol": "CMS"}
+{"active": 1, "exchange": "XNYS", "name": "Centene Corporation", "sector": "Health Care", "symbol": "CNC"}
+{"active": 1, "exchange": "XNYS", "name": "CenterPoint Energy", "sector": "Utilities", "symbol": "CNP"}
+{"active": 1, "exchange": "XNYS", "name": "Capital One", "sector": "Financials", "symbol": "COF"}
 {"active": 1, "exchange": "XBRU", "name": "Cofinimmo", "sector": "Real Estate", "symbol": "COFB.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Coherent Corp.", "sector": "Information Technology", "symbol": "COHR"}
+{"active": 1, "exchange": "XNYS", "name": "Coinbase", "sector": "Financials", "symbol": "COIN"}
+{"active": 1, "exchange": "XNYS", "name": "Cooper Companies (The)", "sector": "Health Care", "symbol": "COO"}
+{"active": 1, "exchange": "XNYS", "name": "ConocoPhillips", "sector": "Energy", "symbol": "COP"}
+{"active": 1, "exchange": "XNYS", "name": "Cencora", "sector": "Health Care", "symbol": "COR"}
+{"active": 1, "exchange": "XNYS", "name": "Costco", "sector": "Consumer Staples", "symbol": "COST"}
+{"active": 1, "exchange": "XNYS", "name": "Corpay", "sector": "Financials", "symbol": "CPAY"}
+{"active": 1, "exchange": "XNYS", "name": "Copart", "sector": "Industrials", "symbol": "CPRT"}
+{"active": 1, "exchange": "XNYS", "name": "Camden Property Trust", "sector": "Real Estate", "symbol": "CPT"}
+{"active": 1, "exchange": "XNYS", "name": "CRH plc", "sector": "Materials", "symbol": "CRH"}
+{"active": 1, "exchange": "XNYS", "name": "Charles River Laboratories", "sector": "Health Care", "symbol": "CRL"}
+{"active": 1, "exchange": "XNYS", "name": "Salesforce", "sector": "Information Technology", "symbol": "CRM"}
+{"active": 1, "exchange": "XNYS", "name": "CrowdStrike", "sector": "Information Technology", "symbol": "CRWD"}
 {"active": 1, "exchange": "XPAR", "name": "AXA", "sector": "Financials", "symbol": "CS.PA"}
+{"active": 1, "exchange": "XNYS", "name": "Cisco", "sector": "Information Technology", "symbol": "CSCO"}
+{"active": 1, "exchange": "XNYS", "name": "CoStar Group", "sector": "Real Estate", "symbol": "CSGP"}
+{"active": 1, "exchange": "XNYS", "name": "CSX Corporation", "sector": "Industrials", "symbol": "CSX"}
+{"active": 1, "exchange": "XNYS", "name": "Cintas", "sector": "Industrials", "symbol": "CTAS"}
+{"active": 1, "exchange": "XNYS", "name": "Cognizant", "sector": "Information Technology", "symbol": "CTSH"}
+{"active": 1, "exchange": "XNYS", "name": "Carvana", "sector": "Consumer Discretionary", "symbol": "CVNA"}
+{"active": 1, "exchange": "XNYS", "name": "CVS Health", "sector": "Health Care", "symbol": "CVS"}
+{"active": 1, "exchange": "XNYS", "name": "Chevron Corporation", "sector": "Energy", "symbol": "CVX"}
+{"active": 1, "exchange": "XNYS", "name": "Dominion Energy", "sector": "Utilities", "symbol": "D"}
+{"active": 1, "exchange": "XNYS", "name": "Delta Air Lines", "sector": "Industrials", "symbol": "DAL"}
+{"active": 1, "exchange": "XNYS", "name": "DoorDash", "sector": "Consumer Discretionary", "symbol": "DASH"}
+{"active": 1, "exchange": "XNYS", "name": "DuPont", "sector": "Industrials", "symbol": "DD"}
+{"active": 1, "exchange": "XNYS", "name": "Datadog", "sector": "Information Technology", "symbol": "DDOG"}
+{"active": 1, "exchange": "XNYS", "name": "Deere & Company", "sector": "Industrials", "symbol": "DE"}
+{"active": 1, "exchange": "XNYS", "name": "Deckers Brands", "sector": "Consumer Discretionary", "symbol": "DECK"}
+{"active": 1, "exchange": "XNYS", "name": "Dell Technologies", "sector": "Information Technology", "symbol": "DELL"}
+{"active": 1, "exchange": "XNYS", "name": "Dollar General", "sector": "Consumer Staples", "symbol": "DG"}
 {"active": 1, "exchange": "XLON", "name": "Diageo", "sector": "Consumer Staples", "symbol": "DGE.L"}
+{"active": 1, "exchange": "XNYS", "name": "Quest Diagnostics", "sector": "Health Care", "symbol": "DGX"}
+{"active": 1, "exchange": "XNYS", "name": "D. R. Horton", "sector": "Consumer Discretionary", "symbol": "DHI"}
+{"active": 1, "exchange": "XNYS", "name": "Danaher Corporation", "sector": "Health Care", "symbol": "DHR"}
 {"active": 1, "exchange": "XBRU", "name": "D'Ieteren Group", "sector": "Consumer Discretionary", "symbol": "DIE.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Walt Disney Company (The)", "sector": "Communication Services", "symbol": "DIS"}
+{"active": 1, "exchange": "XNYS", "name": "Digital Realty", "sector": "Real Estate", "symbol": "DLR"}
+{"active": 1, "exchange": "XNYS", "name": "Dollar Tree", "sector": "Consumer Staples", "symbol": "DLTR"}
+{"active": 1, "exchange": "XNYS", "name": "Healthpeak Properties", "sector": "Real Estate", "symbol": "DOC"}
+{"active": 1, "exchange": "XNYS", "name": "Dover Corporation", "sector": "Industrials", "symbol": "DOV"}
+{"active": 1, "exchange": "XNYS", "name": "Dow Inc.", "sector": "Materials", "symbol": "DOW"}
+{"active": 1, "exchange": "XNYS", "name": "Domino's", "sector": "Consumer Discretionary", "symbol": "DPZ"}
+{"active": 1, "exchange": "XNYS", "name": "Darden Restaurants", "sector": "Consumer Discretionary", "symbol": "DRI"}
 {"active": 1, "exchange": "XCSE", "name": "DSV", "sector": "Industrials", "symbol": "DSV.CO"}
+{"active": 1, "exchange": "XNYS", "name": "DTE Energy", "sector": "Utilities", "symbol": "DTE"}
 {"active": 1, "exchange": "XETR", "name": "Deutsche Telekom", "sector": "Communication Services", "symbol": "DTE.DE"}
+{"active": 1, "exchange": "XNYS", "name": "Duke Energy", "sector": "Utilities", "symbol": "DUK"}
+{"active": 1, "exchange": "XNYS", "name": "DaVita", "sector": "Health Care", "symbol": "DVA"}
+{"active": 1, "exchange": "XNYS", "name": "Devon Energy", "sector": "Energy", "symbol": "DVN"}
+{"active": 1, "exchange": "XNYS", "name": "Dexcom", "sector": "Health Care", "symbol": "DXCM"}
+{"active": 1, "exchange": "XNYS", "name": "eBay Inc.", "sector": "Consumer Discretionary", "symbol": "EBAY"}
+{"active": 1, "exchange": "XNYS", "name": "EchoStar", "sector": "Communication Services", "symbol": "ECHO"}
+{"active": 1, "exchange": "XNYS", "name": "Ecolab", "sector": "Materials", "symbol": "ECL"}
+{"active": 1, "exchange": "XNYS", "name": "Consolidated Edison", "sector": "Utilities", "symbol": "ED"}
+{"active": 1, "exchange": "XNYS", "name": "Equifax", "sector": "Industrials", "symbol": "EFX"}
+{"active": 1, "exchange": "XNYS", "name": "Everest Group", "sector": "Financials", "symbol": "EG"}
+{"active": 1, "exchange": "XNYS", "name": "Edison International", "sector": "Utilities", "symbol": "EIX"}
+{"active": 1, "exchange": "XNYS", "name": "Estée Lauder Companies (The)", "sector": "Consumer Staples", "symbol": "EL"}
 {"active": 1, "exchange": "XPAR", "name": "EssilorLuxottica", "sector": "Health Care", "symbol": "EL.PA"}
 {"active": 1, "exchange": "XBRU", "name": "Elia Group", "sector": "Utilities", "symbol": "ELI.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Elevance Health", "sector": "Health Care", "symbol": "ELV"}
+{"active": 1, "exchange": "XNYS", "name": "Emcor", "sector": "Industrials", "symbol": "EME"}
+{"active": 1, "exchange": "XNYS", "name": "Emerson Electric", "sector": "Industrials", "symbol": "EMR"}
 {"active": 1, "exchange": "XMIL", "name": "Enel", "sector": "Utilities", "symbol": "ENEL.MI"}
+{"active": 1, "exchange": "XNYS", "name": "EOG Resources", "sector": "Energy", "symbol": "EOG"}
+{"active": 1, "exchange": "XNYS", "name": "Equinix", "sector": "Real Estate", "symbol": "EQIX"}
+{"active": 1, "exchange": "XNYS", "name": "EQT Corporation", "sector": "Energy", "symbol": "EQT"}
+{"active": 1, "exchange": "XNYS", "name": "Erie Indemnity", "sector": "Financials", "symbol": "ERIE"}
+{"active": 1, "exchange": "XNYS", "name": "Eversource Energy", "sector": "Utilities", "symbol": "ES"}
+{"active": 1, "exchange": "XNYS", "name": "Essex Property Trust", "sector": "Real Estate", "symbol": "ESS"}
+{"active": 1, "exchange": "XNYS", "name": "Eaton Corporation", "sector": "Industrials", "symbol": "ETN"}
+{"active": 1, "exchange": "XNYS", "name": "Entergy", "sector": "Utilities", "symbol": "ETR"}
+{"active": 1, "exchange": "XNYS", "name": "Evergy", "sector": "Utilities", "symbol": "EVRG"}
+{"active": 1, "exchange": "XNYS", "name": "Edwards Lifesciences", "sector": "Health Care", "symbol": "EW"}
+{"active": 1, "exchange": "XNYS", "name": "Exelon", "sector": "Utilities", "symbol": "EXC"}
+{"active": 1, "exchange": "XNYS", "name": "Expand Energy", "sector": "Energy", "symbol": "EXE"}
+{"active": 1, "exchange": "XNYS", "name": "Expeditors International", "sector": "Industrials", "symbol": "EXPD"}
+{"active": 1, "exchange": "XNYS", "name": "Expedia Group", "sector": "Consumer Discretionary", "symbol": "EXPE"}
+{"active": 1, "exchange": "XNYS", "name": "Extra Space Storage", "sector": "Real Estate", "symbol": "EXR"}
+{"active": 1, "exchange": "XNYS", "name": "Ford Motor Company", "sector": "Consumer Discretionary", "symbol": "F"}
+{"active": 1, "exchange": "XNYS", "name": "Diamondback Energy", "sector": "Energy", "symbol": "FANG"}
+{"active": 1, "exchange": "XNYS", "name": "Fastenal", "sector": "Industrials", "symbol": "FAST"}
+{"active": 1, "exchange": "XNYS", "name": "Freeport-McMoRan", "sector": "Materials", "symbol": "FCX"}
+{"active": 1, "exchange": "XNYS", "name": "FactSet", "sector": "Financials", "symbol": "FDS"}
+{"active": 1, "exchange": "XNYS", "name": "FedEx", "sector": "Industrials", "symbol": "FDX"}
+{"active": 1, "exchange": "XNYS", "name": "FedEx Freight", "sector": "Industrials", "symbol": "FDXF"}
+{"active": 1, "exchange": "XNYS", "name": "FirstEnergy", "sector": "Utilities", "symbol": "FE"}
+{"active": 1, "exchange": "XNYS", "name": "Ferguson Enterprises", "sector": "Industrials", "symbol": "FERG"}
+{"active": 1, "exchange": "XNYS", "name": "F5, Inc.", "sector": "Information Technology", "symbol": "FFIV"}
+{"active": 1, "exchange": "XNYS", "name": "Fair Isaac", "sector": "Information Technology", "symbol": "FICO"}
+{"active": 1, "exchange": "XNYS", "name": "Fidelity National Information Services", "sector": "Financials", "symbol": "FIS"}
+{"active": 1, "exchange": "XNYS", "name": "Fiserv", "sector": "Financials", "symbol": "FISV"}
+{"active": 1, "exchange": "XNYS", "name": "Fifth Third Bancorp", "sector": "Financials", "symbol": "FITB"}
+{"active": 1, "exchange": "XNYS", "name": "Comfort Systems USA", "sector": "Industrials", "symbol": "FIX"}
+{"active": 1, "exchange": "XNYS", "name": "Flex Ltd.", "sector": "Information Technology", "symbol": "FLEX"}
+{"active": 1, "exchange": "XNYS", "name": "Fox Corporation (Class B)", "sector": "Communication Services", "symbol": "FOX"}
+{"active": 1, "exchange": "XNYS", "name": "Fox Corporation (Class A)", "sector": "Communication Services", "symbol": "FOXA"}
+{"active": 1, "exchange": "XNYS", "name": "Federal Realty Investment Trust", "sector": "Real Estate", "symbol": "FRT"}
+{"active": 1, "exchange": "XNYS", "name": "First Solar", "sector": "Information Technology", "symbol": "FSLR"}
+{"active": 1, "exchange": "XNYS", "name": "Fortinet", "sector": "Information Technology", "symbol": "FTNT"}
+{"active": 1, "exchange": "XNYS", "name": "Fortive", "sector": "Industrials", "symbol": "FTV"}
 {"active": 1, "exchange": "XBRU", "name": "Groupe Bruxelles Lambert", "sector": "Financials", "symbol": "GBLB.BR"}
+{"active": 1, "exchange": "XNYS", "name": "General Dynamics", "sector": "Industrials", "symbol": "GD"}
+{"active": 1, "exchange": "XNYS", "name": "GoDaddy", "sector": "Information Technology", "symbol": "GDDY"}
+{"active": 1, "exchange": "XNYS", "name": "GE Aerospace", "sector": "Industrials", "symbol": "GE"}
+{"active": 1, "exchange": "XNYS", "name": "GE HealthCare", "sector": "Health Care", "symbol": "GEHC"}
+{"active": 1, "exchange": "XNYS", "name": "Gen Digital", "sector": "Information Technology", "symbol": "GEN"}
+{"active": 1, "exchange": "XNYS", "name": "GE Vernova", "sector": "Industrials", "symbol": "GEV"}
+{"active": 1, "exchange": "XNYS", "name": "Gilead Sciences", "sector": "Health Care", "symbol": "GILD"}
+{"active": 1, "exchange": "XNYS", "name": "General Mills", "sector": "Consumer Staples", "symbol": "GIS"}
+{"active": 1, "exchange": "XNYS", "name": "Globe Life", "sector": "Financials", "symbol": "GL"}
+{"active": 1, "exchange": "XNYS", "name": "Corning Inc.", "sector": "Information Technology", "symbol": "GLW"}
+{"active": 1, "exchange": "XNYS", "name": "General Motors", "sector": "Consumer Discretionary", "symbol": "GM"}
+{"active": 1, "exchange": "XNYS", "name": "Generac", "sector": "Industrials", "symbol": "GNRC"}
+{"active": 1, "exchange": "XNYS", "name": "Alphabet Inc. (Class C)", "sector": "Communication Services", "symbol": "GOOG"}
+{"active": 1, "exchange": "XNYS", "name": "Alphabet Inc. (Class A)", "sector": "Communication Services", "symbol": "GOOGL"}
+{"active": 1, "exchange": "XNYS", "name": "Genuine Parts Company", "sector": "Consumer Discretionary", "symbol": "GPC"}
+{"active": 1, "exchange": "XNYS", "name": "Global Payments", "sector": "Financials", "symbol": "GPN"}
+{"active": 1, "exchange": "XNYS", "name": "Garmin", "sector": "Consumer Discretionary", "symbol": "GRMN"}
+{"active": 1, "exchange": "XNYS", "name": "Goldman Sachs", "sector": "Financials", "symbol": "GS"}
 {"active": 1, "exchange": "XLON", "name": "GSK", "sector": "Health Care", "symbol": "GSK.L"}
+{"active": 1, "exchange": "XNYS", "name": "W. W. Grainger", "sector": "Industrials", "symbol": "GWW"}
+{"active": 1, "exchange": "XNYS", "name": "Halliburton", "sector": "Energy", "symbol": "HAL"}
+{"active": 1, "exchange": "XNYS", "name": "Hasbro", "sector": "Consumer Discretionary", "symbol": "HAS"}
+{"active": 1, "exchange": "XNYS", "name": "Huntington Bancshares", "sector": "Financials", "symbol": "HBAN"}
+{"active": 1, "exchange": "XNYS", "name": "HCA Healthcare", "sector": "Health Care", "symbol": "HCA"}
+{"active": 1, "exchange": "XNYS", "name": "Home Depot (The)", "sector": "Consumer Discretionary", "symbol": "HD"}
+{"active": 1, "exchange": "XNYS", "name": "Hartford (The)", "sector": "Financials", "symbol": "HIG"}
+{"active": 1, "exchange": "XNYS", "name": "Huntington Ingalls Industries", "sector": "Industrials", "symbol": "HII"}
+{"active": 1, "exchange": "XNYS", "name": "Hilton Worldwide", "sector": "Consumer Discretionary", "symbol": "HLT"}
+{"active": 1, "exchange": "XNYS", "name": "Honeywell Technologies", "sector": "Industrials", "symbol": "HON"}
+{"active": 1, "exchange": "XNYS", "name": "Honeywell Aerospace", "sector": "Industrials", "symbol": "HONA"}
+{"active": 1, "exchange": "XNYS", "name": "Robinhood Markets", "sector": "Financials", "symbol": "HOOD"}
+{"active": 1, "exchange": "XNYS", "name": "Hewlett Packard Enterprise", "sector": "Information Technology", "symbol": "HPE"}
+{"active": 1, "exchange": "XNYS", "name": "HP Inc.", "sector": "Information Technology", "symbol": "HPQ"}
+{"active": 1, "exchange": "XNYS", "name": "Hormel Foods", "sector": "Consumer Staples", "symbol": "HRL"}
 {"active": 1, "exchange": "XLON", "name": "HSBC", "sector": "Financials", "symbol": "HSBA.L"}
+{"active": 1, "exchange": "XNYS", "name": "Henry Schein", "sector": "Health Care", "symbol": "HSIC"}
+{"active": 1, "exchange": "XNYS", "name": "Host Hotels & Resorts", "sector": "Real Estate", "symbol": "HST"}
+{"active": 1, "exchange": "XNYS", "name": "Hershey Company (The)", "sector": "Consumer Staples", "symbol": "HSY"}
+{"active": 1, "exchange": "XNYS", "name": "Hubbell Incorporated", "sector": "Industrials", "symbol": "HUBB"}
+{"active": 1, "exchange": "XNYS", "name": "Humana", "sector": "Health Care", "symbol": "HUM"}
+{"active": 1, "exchange": "XNYS", "name": "Howmet Aerospace", "sector": "Industrials", "symbol": "HWM"}
 {"active": 1, "exchange": "XMAD", "name": "Iberdrola", "sector": "Utilities", "symbol": "IBE.MC"}
+{"active": 1, "exchange": "XNYS", "name": "Interactive Brokers", "sector": "Financials", "symbol": "IBKR"}
+{"active": 1, "exchange": "XNYS", "name": "IBM", "sector": "Information Technology", "symbol": "IBM"}
+{"active": 1, "exchange": "XNYS", "name": "Intercontinental Exchange", "sector": "Financials", "symbol": "ICE"}
+{"active": 1, "exchange": "XNYS", "name": "Idexx Laboratories", "sector": "Health Care", "symbol": "IDXX"}
+{"active": 1, "exchange": "XNYS", "name": "IDEX Corporation", "sector": "Industrials", "symbol": "IEX"}
+{"active": 1, "exchange": "XNYS", "name": "International Flavors & Fragrances", "sector": "Materials", "symbol": "IFF"}
+{"active": 1, "exchange": "XNYS", "name": "Illumina, Inc.", "sector": "Health Care", "symbol": "ILMN"}
+{"active": 1, "exchange": "XNYS", "name": "Incyte", "sector": "Health Care", "symbol": "INCY"}
 {"active": 1, "exchange": "XAMS", "name": "ING Group", "sector": "Financials", "symbol": "INGA.AS"}
+{"active": 1, "exchange": "XNYS", "name": "Intel", "sector": "Information Technology", "symbol": "INTC"}
+{"active": 1, "exchange": "XNYS", "name": "Intuit", "sector": "Information Technology", "symbol": "INTU"}
+{"active": 1, "exchange": "XNYS", "name": "Invitation Homes", "sector": "Real Estate", "symbol": "INVH"}
+{"active": 1, "exchange": "XNYS", "name": "International Paper", "sector": "Materials", "symbol": "IP"}
+{"active": 1, "exchange": "XNYS", "name": "IQVIA", "sector": "Health Care", "symbol": "IQV"}
+{"active": 1, "exchange": "XNYS", "name": "Ingersoll Rand", "sector": "Industrials", "symbol": "IR"}
+{"active": 1, "exchange": "XNYS", "name": "Iron Mountain", "sector": "Real Estate", "symbol": "IRM"}
 {"active": 1, "exchange": "XMIL", "name": "Intesa Sanpaolo", "sector": "Financials", "symbol": "ISP.MI"}
+{"active": 1, "exchange": "XNYS", "name": "Intuitive Surgical", "sector": "Health Care", "symbol": "ISRG"}
+{"active": 1, "exchange": "XNYS", "name": "Gartner", "sector": "Information Technology", "symbol": "IT"}
+{"active": 1, "exchange": "XNYS", "name": "Illinois Tool Works", "sector": "Industrials", "symbol": "ITW"}
 {"active": 1, "exchange": "XMAD", "name": "Inditex", "sector": "Consumer Discretionary", "symbol": "ITX.MC"}
+{"active": 1, "exchange": "XNYS", "name": "Invesco", "sector": "Financials", "symbol": "IVZ"}
+{"active": 1, "exchange": "XNYS", "name": "Jacobs Solutions", "sector": "Industrials", "symbol": "J"}
+{"active": 1, "exchange": "XNYS", "name": "J.B. Hunt", "sector": "Industrials", "symbol": "JBHT"}
+{"active": 1, "exchange": "XNYS", "name": "Jabil", "sector": "Information Technology", "symbol": "JBL"}
+{"active": 1, "exchange": "XNYS", "name": "Johnson Controls", "sector": "Industrials", "symbol": "JCI"}
+{"active": 1, "exchange": "XNYS", "name": "Jack Henry & Associates", "sector": "Financials", "symbol": "JKHY"}
+{"active": 1, "exchange": "XNYS", "name": "Johnson & Johnson", "sector": "Health Care", "symbol": "JNJ"}
+{"active": 1, "exchange": "XNYS", "name": "JPMorgan Chase", "sector": "Financials", "symbol": "JPM"}
 {"active": 1, "exchange": "XBRU", "name": "KBC Group", "sector": "Financials", "symbol": "KBC.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Keurig Dr Pepper", "sector": "Consumer Staples", "symbol": "KDP"}
+{"active": 1, "exchange": "XNYS", "name": "KeyCorp", "sector": "Financials", "symbol": "KEY"}
+{"active": 1, "exchange": "XNYS", "name": "Keysight Technologies", "sector": "Information Technology", "symbol": "KEYS"}
+{"active": 1, "exchange": "XNYS", "name": "Kraft Heinz", "sector": "Consumer Staples", "symbol": "KHC"}
+{"active": 1, "exchange": "XNYS", "name": "Kimco Realty", "sector": "Real Estate", "symbol": "KIM"}
+{"active": 1, "exchange": "XNYS", "name": "KKR & Co.", "sector": "Financials", "symbol": "KKR"}
+{"active": 1, "exchange": "XNYS", "name": "KLA Corporation", "sector": "Information Technology", "symbol": "KLAC"}
+{"active": 1, "exchange": "XNYS", "name": "Kimberly-Clark", "sector": "Consumer Staples", "symbol": "KMB"}
+{"active": 1, "exchange": "XNYS", "name": "Kinder Morgan", "sector": "Energy", "symbol": "KMI"}
+{"active": 1, "exchange": "XNYS", "name": "Coca-Cola Company (The)", "sector": "Consumer Staples", "symbol": "KO"}
+{"active": 1, "exchange": "XNYS", "name": "Kroger", "sector": "Consumer Staples", "symbol": "KR"}
+{"active": 1, "exchange": "XNYS", "name": "Loews Corporation", "sector": "Financials", "symbol": "L"}
+{"active": 1, "exchange": "XNYS", "name": "Leidos", "sector": "Industrials", "symbol": "LDOS"}
+{"active": 1, "exchange": "XNYS", "name": "Lennar", "sector": "Consumer Discretionary", "symbol": "LEN"}
+{"active": 1, "exchange": "XNYS", "name": "Labcorp", "sector": "Health Care", "symbol": "LH"}
+{"active": 1, "exchange": "XNYS", "name": "L3Harris", "sector": "Industrials", "symbol": "LHX"}
+{"active": 1, "exchange": "XNYS", "name": "Lennox International", "sector": "Industrials", "symbol": "LII"}
+{"active": 1, "exchange": "XNYS", "name": "Linde plc", "sector": "Materials", "symbol": "LIN"}
+{"active": 1, "exchange": "XNYS", "name": "Lumentum", "sector": "Information Technology", "symbol": "LITE"}
+{"active": 1, "exchange": "XNYS", "name": "Lilly (Eli)", "sector": "Health Care", "symbol": "LLY"}
+{"active": 1, "exchange": "XNYS", "name": "Lockheed Martin", "sector": "Industrials", "symbol": "LMT"}
+{"active": 1, "exchange": "XNYS", "name": "Alliant Energy", "sector": "Utilities", "symbol": "LNT"}
 {"active": 1, "exchange": "XBRU", "name": "Lotus Bakeries", "sector": "Consumer Staples", "symbol": "LOTB.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Lowe's", "sector": "Consumer Discretionary", "symbol": "LOW"}
+{"active": 1, "exchange": "XNYS", "name": "Lam Research", "sector": "Information Technology", "symbol": "LRCX"}
 {"active": 1, "exchange": "XLON", "name": "London Stock Exchange Group", "sector": "Financials", "symbol": "LSEG.L"}
+{"active": 1, "exchange": "XNYS", "name": "Lululemon Athletica", "sector": "Consumer Discretionary", "symbol": "LULU"}
+{"active": 1, "exchange": "XNYS", "name": "Southwest Airlines", "sector": "Industrials", "symbol": "LUV"}
+{"active": 1, "exchange": "XNYS", "name": "Las Vegas Sands", "sector": "Consumer Discretionary", "symbol": "LVS"}
+{"active": 1, "exchange": "XNYS", "name": "LyondellBasell", "sector": "Materials", "symbol": "LYB"}
+{"active": 1, "exchange": "XNYS", "name": "Live Nation Entertainment", "sector": "Communication Services", "symbol": "LYV"}
+{"active": 1, "exchange": "XNYS", "name": "Mastercard", "sector": "Financials", "symbol": "MA"}
+{"active": 1, "exchange": "XNYS", "name": "Mid-America Apartment Communities", "sector": "Real Estate", "symbol": "MAA"}
+{"active": 1, "exchange": "XNYS", "name": "Marriott International", "sector": "Consumer Discretionary", "symbol": "MAR"}
+{"active": 1, "exchange": "XNYS", "name": "Masco", "sector": "Industrials", "symbol": "MAS"}
 {"active": 1, "exchange": "XPAR", "name": "LVMH", "sector": "Consumer Discretionary", "symbol": "MC.PA"}
+{"active": 1, "exchange": "XNYS", "name": "McDonald's", "sector": "Consumer Discretionary", "symbol": "MCD"}
+{"active": 1, "exchange": "XNYS", "name": "Microchip Technology", "sector": "Information Technology", "symbol": "MCHP"}
+{"active": 1, "exchange": "XNYS", "name": "McKesson", "sector": "Health Care", "symbol": "MCK"}
+{"active": 1, "exchange": "XNYS", "name": "Moody's Corporation", "sector": "Financials", "symbol": "MCO"}
+{"active": 1, "exchange": "XNYS", "name": "Mondelez International", "sector": "Consumer Staples", "symbol": "MDLZ"}
+{"active": 1, "exchange": "XNYS", "name": "Medtronic", "sector": "Health Care", "symbol": "MDT"}
 {"active": 1, "exchange": "XBRU", "name": "Melexis", "sector": "Information Technology", "symbol": "MELE.BR"}
+{"active": 1, "exchange": "XNYS", "name": "MetLife", "sector": "Financials", "symbol": "MET"}
+{"active": 1, "exchange": "XNYS", "name": "Meta Platforms", "sector": "Communication Services", "symbol": "META"}
+{"active": 1, "exchange": "XNYS", "name": "MGM Resorts", "sector": "Consumer Discretionary", "symbol": "MGM"}
+{"active": 1, "exchange": "XNYS", "name": "McCormick & Company", "sector": "Consumer Staples", "symbol": "MKC"}
+{"active": 1, "exchange": "XNYS", "name": "Martin Marietta Materials", "sector": "Materials", "symbol": "MLM"}
+{"active": 1, "exchange": "XNYS", "name": "3M", "sector": "Industrials", "symbol": "MMM"}
+{"active": 1, "exchange": "XNYS", "name": "Monster Beverage", "sector": "Consumer Staples", "symbol": "MNST"}
+{"active": 1, "exchange": "XNYS", "name": "Altria", "sector": "Consumer Staples", "symbol": "MO"}
+{"active": 1, "exchange": "XNYS", "name": "Mosaic Company (The)", "sector": "Materials", "symbol": "MOS"}
+{"active": 1, "exchange": "XNYS", "name": "Marathon Petroleum", "sector": "Energy", "symbol": "MPC"}
+{"active": 1, "exchange": "XNYS", "name": "Monolithic Power Systems", "sector": "Information Technology", "symbol": "MPWR"}
+{"active": 1, "exchange": "XNYS", "name": "Merck & Co.", "sector": "Health Care", "symbol": "MRK"}
+{"active": 1, "exchange": "XNYS", "name": "Moderna", "sector": "Health Care", "symbol": "MRNA"}
+{"active": 1, "exchange": "XNYS", "name": "Marsh McLennan", "sector": "Financials", "symbol": "MRSH"}
+{"active": 1, "exchange": "XNYS", "name": "Marvell Technology", "sector": "Information Technology", "symbol": "MRVL"}
+{"active": 1, "exchange": "XNYS", "name": "Morgan Stanley", "sector": "Financials", "symbol": "MS"}
+{"active": 1, "exchange": "XNYS", "name": "MSCI", "sector": "Financials", "symbol": "MSCI"}
+{"active": 1, "exchange": "XNYS", "name": "Microsoft", "sector": "Information Technology", "symbol": "MSFT"}
+{"active": 1, "exchange": "XNYS", "name": "Motorola Solutions", "sector": "Information Technology", "symbol": "MSI"}
+{"active": 1, "exchange": "XNYS", "name": "M&T Bank", "sector": "Financials", "symbol": "MTB"}
+{"active": 1, "exchange": "XNYS", "name": "Mettler Toledo", "sector": "Health Care", "symbol": "MTD"}
+{"active": 1, "exchange": "XNYS", "name": "Micron Technology", "sector": "Information Technology", "symbol": "MU"}
 {"active": 1, "exchange": "XETR", "name": "Munich Re", "sector": "Financials", "symbol": "MUV2.DE"}
+{"active": 1, "exchange": "XNYS", "name": "Norwegian Cruise Line Holdings", "sector": "Consumer Discretionary", "symbol": "NCLH"}
 {"active": 1, "exchange": "XHEL", "name": "Nordea", "sector": "Financials", "symbol": "NDA-FI.HE"}
+{"active": 1, "exchange": "XNYS", "name": "Nasdaq, Inc.", "sector": "Financials", "symbol": "NDAQ"}
+{"active": 1, "exchange": "XNYS", "name": "Nordson Corporation", "sector": "Industrials", "symbol": "NDSN"}
+{"active": 1, "exchange": "XNYS", "name": "NextEra Energy", "sector": "Utilities", "symbol": "NEE"}
+{"active": 1, "exchange": "XNYS", "name": "Newmont", "sector": "Materials", "symbol": "NEM"}
 {"active": 1, "exchange": "XSWX", "name": "Nestle", "sector": "Consumer Staples", "symbol": "NESN.SW"}
+{"active": 1, "exchange": "XNYS", "name": "Netflix", "sector": "Communication Services", "symbol": "NFLX"}
+{"active": 1, "exchange": "XNYS", "name": "NiSource", "sector": "Utilities", "symbol": "NI"}
+{"active": 1, "exchange": "XNYS", "name": "Nike, Inc.", "sector": "Consumer Discretionary", "symbol": "NKE"}
+{"active": 1, "exchange": "XNYS", "name": "Northrop Grumman", "sector": "Industrials", "symbol": "NOC"}
 {"active": 1, "exchange": "XSWX", "name": "Novartis", "sector": "Health Care", "symbol": "NOVN.SW"}
 {"active": 1, "exchange": "XCSE", "name": "Novo Nordisk", "sector": "Health Care", "symbol": "NOVO-B.CO"}
+{"active": 1, "exchange": "XNYS", "name": "ServiceNow", "sector": "Information Technology", "symbol": "NOW"}
+{"active": 1, "exchange": "XNYS", "name": "NRG Energy", "sector": "Utilities", "symbol": "NRG"}
+{"active": 1, "exchange": "XNYS", "name": "Norfolk Southern", "sector": "Industrials", "symbol": "NSC"}
+{"active": 1, "exchange": "XNYS", "name": "NetApp", "sector": "Information Technology", "symbol": "NTAP"}
+{"active": 1, "exchange": "XNYS", "name": "Northern Trust", "sector": "Financials", "symbol": "NTRS"}
+{"active": 1, "exchange": "XNYS", "name": "Nucor", "sector": "Materials", "symbol": "NUE"}
+{"active": 1, "exchange": "XNYS", "name": "Nvidia", "sector": "Information Technology", "symbol": "NVDA"}
+{"active": 1, "exchange": "XNYS", "name": "NVR, Inc.", "sector": "Consumer Discretionary", "symbol": "NVR"}
+{"active": 1, "exchange": "XNYS", "name": "News Corp (Class B)", "sector": "Communication Services", "symbol": "NWS"}
+{"active": 1, "exchange": "XNYS", "name": "News Corp (Class A)", "sector": "Communication Services", "symbol": "NWSA"}
+{"active": 1, "exchange": "XNYS", "name": "NXP Semiconductors", "sector": "Information Technology", "symbol": "NXPI"}
+{"active": 1, "exchange": "XNYS", "name": "Realty Income", "sector": "Real Estate", "symbol": "O"}
+{"active": 1, "exchange": "XNYS", "name": "Old Dominion", "sector": "Industrials", "symbol": "ODFL"}
+{"active": 1, "exchange": "XNYS", "name": "Oneok", "sector": "Energy", "symbol": "OKE"}
+{"active": 1, "exchange": "XNYS", "name": "Okta, Inc.", "sector": "Information Technology", "symbol": "OKTA"}
+{"active": 1, "exchange": "XNYS", "name": "Omnicom Group", "sector": "Communication Services", "symbol": "OMC"}
+{"active": 1, "exchange": "XNYS", "name": "ON Semiconductor", "sector": "Information Technology", "symbol": "ON"}
 {"active": 1, "exchange": "XPAR", "name": "L'Oreal", "sector": "Consumer Staples", "symbol": "OR.PA"}
+{"active": 1, "exchange": "XNYS", "name": "Oracle Corporation", "sector": "Information Technology", "symbol": "ORCL"}
+{"active": 1, "exchange": "XNYS", "name": "O'Reilly Automotive", "sector": "Consumer Discretionary", "symbol": "ORLY"}
+{"active": 1, "exchange": "XNYS", "name": "Otis Worldwide", "sector": "Industrials", "symbol": "OTIS"}
+{"active": 1, "exchange": "XNYS", "name": "Occidental Petroleum", "sector": "Energy", "symbol": "OXY"}
+{"active": 1, "exchange": "XNYS", "name": "Everpure", "sector": "Information Technology", "symbol": "P"}
+{"active": 1, "exchange": "XNYS", "name": "Palo Alto Networks", "sector": "Information Technology", "symbol": "PANW"}
+{"active": 1, "exchange": "XNYS", "name": "Paychex", "sector": "Industrials", "symbol": "PAYX"}
+{"active": 1, "exchange": "XNYS", "name": "Paccar", "sector": "Industrials", "symbol": "PCAR"}
+{"active": 1, "exchange": "XNYS", "name": "PG&E Corporation", "sector": "Utilities", "symbol": "PCG"}
+{"active": 1, "exchange": "XNYS", "name": "Public Service Enterprise Group", "sector": "Utilities", "symbol": "PEG"}
+{"active": 1, "exchange": "XNYS", "name": "PepsiCo", "sector": "Consumer Staples", "symbol": "PEP"}
+{"active": 1, "exchange": "XNYS", "name": "Pfizer", "sector": "Health Care", "symbol": "PFE"}
+{"active": 1, "exchange": "XNYS", "name": "Principal Financial Group", "sector": "Financials", "symbol": "PFG"}
+{"active": 1, "exchange": "XNYS", "name": "Procter & Gamble", "sector": "Consumer Staples", "symbol": "PG"}
+{"active": 1, "exchange": "XNYS", "name": "Progressive Corporation", "sector": "Financials", "symbol": "PGR"}
+{"active": 1, "exchange": "XNYS", "name": "Parker Hannifin", "sector": "Industrials", "symbol": "PH"}
+{"active": 1, "exchange": "XNYS", "name": "PulteGroup", "sector": "Consumer Discretionary", "symbol": "PHM"}
+{"active": 1, "exchange": "XNYS", "name": "Packaging Corporation of America", "sector": "Materials", "symbol": "PKG"}
+{"active": 1, "exchange": "XNYS", "name": "Prologis", "sector": "Real Estate", "symbol": "PLD"}
+{"active": 1, "exchange": "XNYS", "name": "Palantir Technologies", "sector": "Information Technology", "symbol": "PLTR"}
+{"active": 1, "exchange": "XNYS", "name": "Philip Morris International", "sector": "Consumer Staples", "symbol": "PM"}
+{"active": 1, "exchange": "XNYS", "name": "PNC Financial Services", "sector": "Financials", "symbol": "PNC"}
+{"active": 1, "exchange": "XNYS", "name": "Pentair", "sector": "Industrials", "symbol": "PNR"}
+{"active": 1, "exchange": "XNYS", "name": "Pinnacle West Capital", "sector": "Utilities", "symbol": "PNW"}
+{"active": 1, "exchange": "XNYS", "name": "Insulet Corporation", "sector": "Health Care", "symbol": "PODD"}
+{"active": 1, "exchange": "XNYS", "name": "PPG Industries", "sector": "Materials", "symbol": "PPG"}
+{"active": 1, "exchange": "XNYS", "name": "PPL Corporation", "sector": "Utilities", "symbol": "PPL"}
 {"active": 1, "exchange": "XBRU", "name": "Proximus", "sector": "Communication Services", "symbol": "PROX.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Prudential Financial", "sector": "Financials", "symbol": "PRU"}
 {"active": 1, "exchange": "XAMS", "name": "Prosus", "sector": "Consumer Discretionary", "symbol": "PRX.AS"}
+{"active": 1, "exchange": "XNYS", "name": "Public Storage", "sector": "Real Estate", "symbol": "PSA"}
+{"active": 1, "exchange": "XNYS", "name": "Phillips 66", "sector": "Energy", "symbol": "PSX"}
+{"active": 1, "exchange": "XNYS", "name": "PTC Inc.", "sector": "Information Technology", "symbol": "PTC"}
+{"active": 1, "exchange": "XNYS", "name": "Quanta Services", "sector": "Industrials", "symbol": "PWR"}
+{"active": 1, "exchange": "XNYS", "name": "PayPal", "sector": "Financials", "symbol": "PYPL"}
+{"active": 1, "exchange": "XNYS", "name": "Qnity Electronics", "sector": "Information Technology", "symbol": "Q"}
+{"active": 1, "exchange": "XNYS", "name": "Qualcomm", "sector": "Information Technology", "symbol": "QCOM"}
 {"active": 1, "exchange": "XMIL", "name": "Ferrari", "sector": "Consumer Discretionary", "symbol": "RACE.MI"}
+{"active": 1, "exchange": "XNYS", "name": "Royal Caribbean Group", "sector": "Consumer Discretionary", "symbol": "RCL"}
+{"active": 1, "exchange": "XNYS", "name": "Reddit", "sector": "Communication Services", "symbol": "RDDT"}
+{"active": 1, "exchange": "XNYS", "name": "Regency Centers", "sector": "Real Estate", "symbol": "REG"}
+{"active": 1, "exchange": "XNYS", "name": "Regeneron Pharmaceuticals", "sector": "Health Care", "symbol": "REGN"}
 {"active": 1, "exchange": "XLON", "name": "RELX", "sector": "Industrials", "symbol": "REL.L"}
+{"active": 1, "exchange": "XNYS", "name": "Regions Financial Corporation", "sector": "Financials", "symbol": "RF"}
 {"active": 1, "exchange": "XETR", "name": "Rheinmetall", "sector": "Industrials", "symbol": "RHM.DE"}
 {"active": 1, "exchange": "XLON", "name": "Rio Tinto", "sector": "Materials", "symbol": "RIO.L"}
+{"active": 1, "exchange": "XNYS", "name": "Raymond James Financial", "sector": "Financials", "symbol": "RJF"}
+{"active": 1, "exchange": "XNYS", "name": "Ralph Lauren Corporation", "sector": "Consumer Discretionary", "symbol": "RL"}
+{"active": 1, "exchange": "XNYS", "name": "ResMed", "sector": "Health Care", "symbol": "RMD"}
 {"active": 1, "exchange": "XPAR", "name": "Hermes", "sector": "Consumer Discretionary", "symbol": "RMS.PA"}
 {"active": 1, "exchange": "XSWX", "name": "Roche", "sector": "Health Care", "symbol": "ROG.SW"}
+{"active": 1, "exchange": "XNYS", "name": "Rockwell Automation", "sector": "Industrials", "symbol": "ROK"}
+{"active": 1, "exchange": "XNYS", "name": "Rollins, Inc.", "sector": "Industrials", "symbol": "ROL"}
+{"active": 1, "exchange": "XNYS", "name": "Roper Technologies", "sector": "Information Technology", "symbol": "ROP"}
+{"active": 1, "exchange": "XNYS", "name": "Ross Stores", "sector": "Consumer Discretionary", "symbol": "ROST"}
+{"active": 1, "exchange": "XNYS", "name": "Republic Services", "sector": "Industrials", "symbol": "RSG"}
+{"active": 1, "exchange": "XNYS", "name": "RTX Corporation", "sector": "Industrials", "symbol": "RTX"}
+{"active": 1, "exchange": "XNYS", "name": "Revvity", "sector": "Health Care", "symbol": "RVTY"}
 {"active": 1, "exchange": "XPAR", "name": "Safran", "sector": "Industrials", "symbol": "SAF.PA"}
 {"active": 1, "exchange": "XMAD", "name": "Banco Santander", "sector": "Financials", "symbol": "SAN.MC"}
 {"active": 1, "exchange": "XPAR", "name": "Sanofi", "sector": "Health Care", "symbol": "SAN.PA"}
 {"active": 1, "exchange": "XETR", "name": "SAP", "sector": "Information Technology", "symbol": "SAP.DE"}
+{"active": 1, "exchange": "XNYS", "name": "SBA Communications", "sector": "Real Estate", "symbol": "SBAC"}
+{"active": 1, "exchange": "XNYS", "name": "Starbucks", "sector": "Consumer Discretionary", "symbol": "SBUX"}
+{"active": 1, "exchange": "XNYS", "name": "Charles Schwab Corporation", "sector": "Financials", "symbol": "SCHW"}
 {"active": 1, "exchange": "XLON", "name": "Shell", "sector": "Energy", "symbol": "SHEL.L"}
+{"active": 1, "exchange": "XNYS", "name": "Sherwin-Williams", "sector": "Materials", "symbol": "SHW"}
 {"active": 1, "exchange": "XETR", "name": "Siemens", "sector": "Industrials", "symbol": "SIE.DE"}
+{"active": 1, "exchange": "XNYS", "name": "J.M. Smucker Company (The)", "sector": "Consumer Staples", "symbol": "SJM"}
+{"active": 1, "exchange": "XNYS", "name": "Skydance", "sector": "Communication Services", "symbol": "SKYD"}
+{"active": 1, "exchange": "XNYS", "name": "Schlumberger", "sector": "Energy", "symbol": "SLB"}
+{"active": 1, "exchange": "XNYS", "name": "Supermicro", "sector": "Information Technology", "symbol": "SMCI"}
+{"active": 1, "exchange": "XNYS", "name": "Snap-on", "sector": "Industrials", "symbol": "SNA"}
+{"active": 1, "exchange": "XNYS", "name": "Sandisk", "sector": "Information Technology", "symbol": "SNDK"}
+{"active": 1, "exchange": "XNYS", "name": "Synopsys", "sector": "Information Technology", "symbol": "SNPS"}
+{"active": 1, "exchange": "XNYS", "name": "Southern Company", "sector": "Utilities", "symbol": "SO"}
 {"active": 1, "exchange": "XBRU", "name": "Sofina", "sector": "Financials", "symbol": "SOF.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Solventum", "sector": "Health Care", "symbol": "SOLV"}
+{"active": 1, "exchange": "XNYS", "name": "Simon Property Group", "sector": "Real Estate", "symbol": "SPG"}
+{"active": 1, "exchange": "XNYS", "name": "S&P Global", "sector": "Financials", "symbol": "SPGI"}
+{"active": 1, "exchange": "XNYS", "name": "Sempra", "sector": "Utilities", "symbol": "SRE"}
+{"active": 1, "exchange": "XNYS", "name": "Steris", "sector": "Health Care", "symbol": "STE"}
+{"active": 1, "exchange": "XNYS", "name": "Steel Dynamics", "sector": "Materials", "symbol": "STLD"}
+{"active": 1, "exchange": "XNYS", "name": "State Street Corporation", "sector": "Financials", "symbol": "STT"}
+{"active": 1, "exchange": "XNYS", "name": "Seagate Technology", "sector": "Information Technology", "symbol": "STX"}
+{"active": 1, "exchange": "XNYS", "name": "Constellation Brands", "sector": "Consumer Staples", "symbol": "STZ"}
 {"active": 1, "exchange": "XPAR", "name": "Schneider Electric", "sector": "Industrials", "symbol": "SU.PA"}
+{"active": 1, "exchange": "XNYS", "name": "Smurfit Westrock", "sector": "Materials", "symbol": "SW"}
+{"active": 1, "exchange": "XNYS", "name": "Stanley Black & Decker", "sector": "Industrials", "symbol": "SWK"}
+{"active": 1, "exchange": "XNYS", "name": "Skyworks Solutions", "sector": "Information Technology", "symbol": "SWKS"}
 {"active": 1, "exchange": "XBRU", "name": "Syensqo", "sector": "Materials", "symbol": "SYENS.BR"}
+{"active": 1, "exchange": "XNYS", "name": "Synchrony Financial", "sector": "Financials", "symbol": "SYF"}
+{"active": 1, "exchange": "XNYS", "name": "Stryker Corporation", "sector": "Health Care", "symbol": "SYK"}
+{"active": 1, "exchange": "XNYS", "name": "Sysco", "sector": "Consumer Staples", "symbol": "SYY"}
+{"active": 1, "exchange": "XNYS", "name": "AT&T", "sector": "Communication Services", "symbol": "T"}
+{"active": 1, "exchange": "XNYS", "name": "TransDigm Group", "sector": "Industrials", "symbol": "TDG"}
+{"active": 1, "exchange": "XNYS", "name": "Teledyne Technologies", "sector": "Information Technology", "symbol": "TDY"}
+{"active": 1, "exchange": "XNYS", "name": "Bio-Techne", "sector": "Health Care", "symbol": "TECH"}
+{"active": 1, "exchange": "XNYS", "name": "TE Connectivity", "sector": "Information Technology", "symbol": "TEL"}
+{"active": 1, "exchange": "XNYS", "name": "Teradyne", "sector": "Information Technology", "symbol": "TER"}
+{"active": 1, "exchange": "XNYS", "name": "Truist Financial", "sector": "Financials", "symbol": "TFC"}
+{"active": 1, "exchange": "XNYS", "name": "Target Corporation", "sector": "Consumer Staples", "symbol": "TGT"}
+{"active": 1, "exchange": "XNYS", "name": "TJX Companies", "sector": "Consumer Discretionary", "symbol": "TJX"}
+{"active": 1, "exchange": "XNYS", "name": "TKO Group Holdings", "sector": "Communication Services", "symbol": "TKO"}
+{"active": 1, "exchange": "XNYS", "name": "Thermo Fisher Scientific", "sector": "Health Care", "symbol": "TMO"}
+{"active": 1, "exchange": "XNYS", "name": "T-Mobile US", "sector": "Communication Services", "symbol": "TMUS"}
+{"active": 1, "exchange": "XNYS", "name": "Texas Pacific Land Corporation", "sector": "Energy", "symbol": "TPL"}
+{"active": 1, "exchange": "XNYS", "name": "Tapestry, Inc.", "sector": "Consumer Discretionary", "symbol": "TPR"}
+{"active": 1, "exchange": "XNYS", "name": "Targa Resources", "sector": "Energy", "symbol": "TRGP"}
+{"active": 1, "exchange": "XNYS", "name": "Trimble Inc.", "sector": "Information Technology", "symbol": "TRMB"}
+{"active": 1, "exchange": "XNYS", "name": "T. Rowe Price", "sector": "Financials", "symbol": "TROW"}
+{"active": 1, "exchange": "XNYS", "name": "Travelers Companies (The)", "sector": "Financials", "symbol": "TRV"}
+{"active": 1, "exchange": "XNYS", "name": "Tractor Supply", "sector": "Consumer Discretionary", "symbol": "TSCO"}
+{"active": 1, "exchange": "XNYS", "name": "Tesla, Inc.", "sector": "Consumer Discretionary", "symbol": "TSLA"}
+{"active": 1, "exchange": "XNYS", "name": "Tyson Foods", "sector": "Consumer Staples", "symbol": "TSN"}
+{"active": 1, "exchange": "XNYS", "name": "Trane Technologies", "sector": "Industrials", "symbol": "TT"}
 {"active": 1, "exchange": "XPAR", "name": "TotalEnergies", "sector": "Energy", "symbol": "TTE.PA"}
+{"active": 1, "exchange": "XNYS", "name": "Take-Two Interactive", "sector": "Communication Services", "symbol": "TTWO"}
+{"active": 1, "exchange": "XNYS", "name": "Twilio", "sector": "Information Technology", "symbol": "TWLO"}
+{"active": 1, "exchange": "XNYS", "name": "Texas Instruments", "sector": "Information Technology", "symbol": "TXN"}
+{"active": 1, "exchange": "XNYS", "name": "Textron", "sector": "Industrials", "symbol": "TXT"}
+{"active": 1, "exchange": "XNYS", "name": "Tyler Technologies", "sector": "Information Technology", "symbol": "TYL"}
+{"active": 1, "exchange": "XNYS", "name": "United Airlines Holdings", "sector": "Industrials", "symbol": "UAL"}
+{"active": 1, "exchange": "XNYS", "name": "Uber", "sector": "Industrials", "symbol": "UBER"}
 {"active": 1, "exchange": "XSWX", "name": "UBS Group", "sector": "Financials", "symbol": "UBSG.SW"}
 {"active": 1, "exchange": "XBRU", "name": "UCB", "sector": "Health Care", "symbol": "UCB.BR"}
 {"active": 1, "exchange": "XMIL", "name": "UniCredit", "sector": "Financials", "symbol": "UCG.MI"}
+{"active": 1, "exchange": "XNYS", "name": "UDR, Inc.", "sector": "Real Estate", "symbol": "UDR"}
+{"active": 1, "exchange": "XNYS", "name": "Universal Health Services", "sector": "Health Care", "symbol": "UHS"}
+{"active": 1, "exchange": "XNYS", "name": "Ulta Beauty", "sector": "Consumer Discretionary", "symbol": "ULTA"}
 {"active": 1, "exchange": "XLON", "name": "Unilever", "sector": "Consumer Staples", "symbol": "ULVR.L"}
 {"active": 1, "exchange": "XBRU", "name": "Umicore", "sector": "Materials", "symbol": "UMI.BR"}
+{"active": 1, "exchange": "XNYS", "name": "UnitedHealth Group", "sector": "Health Care", "symbol": "UNH"}
+{"active": 1, "exchange": "XNYS", "name": "Union Pacific Corporation", "sector": "Industrials", "symbol": "UNP"}
+{"active": 1, "exchange": "XNYS", "name": "United Parcel Service", "sector": "Industrials", "symbol": "UPS"}
+{"active": 1, "exchange": "XNYS", "name": "United Rentals", "sector": "Industrials", "symbol": "URI"}
+{"active": 1, "exchange": "XNYS", "name": "U.S. Bancorp", "sector": "Financials", "symbol": "USB"}
+{"active": 1, "exchange": "XNYS", "name": "Visa Inc.", "sector": "Financials", "symbol": "V"}
+{"active": 1, "exchange": "XNYS", "name": "Veeva Systems", "sector": "Health Care", "symbol": "VEEV"}
+{"active": 1, "exchange": "XNYS", "name": "Vici Properties", "sector": "Real Estate", "symbol": "VICI"}
+{"active": 1, "exchange": "XNYS", "name": "Valero Energy", "sector": "Energy", "symbol": "VLO"}
+{"active": 1, "exchange": "XNYS", "name": "Veralto", "sector": "Industrials", "symbol": "VLTO"}
+{"active": 1, "exchange": "XNYS", "name": "Vulcan Materials Company", "sector": "Materials", "symbol": "VMC"}
+{"active": 1, "exchange": "XNYS", "name": "Vivmark Residential", "sector": "Real Estate", "symbol": "VMRK"}
 {"active": 1, "exchange": "XSTO", "name": "Volvo", "sector": "Industrials", "symbol": "VOLV-B.ST"}
+{"active": 1, "exchange": "XNYS", "name": "Verisk Analytics", "sector": "Industrials", "symbol": "VRSK"}
+{"active": 1, "exchange": "XNYS", "name": "Verisign", "sector": "Information Technology", "symbol": "VRSN"}
+{"active": 1, "exchange": "XNYS", "name": "Vertiv", "sector": "Industrials", "symbol": "VRT"}
+{"active": 1, "exchange": "XNYS", "name": "Vertex Pharmaceuticals", "sector": "Health Care", "symbol": "VRTX"}
+{"active": 1, "exchange": "XNYS", "name": "Vistra Corp.", "sector": "Utilities", "symbol": "VST"}
+{"active": 1, "exchange": "XNYS", "name": "Ventas", "sector": "Real Estate", "symbol": "VTR"}
+{"active": 1, "exchange": "XNYS", "name": "Viatris", "sector": "Health Care", "symbol": "VTRS"}
+{"active": 1, "exchange": "XNYS", "name": "Vylor", "sector": "Consumer Staples", "symbol": "VYLR"}
+{"active": 1, "exchange": "XNYS", "name": "Verizon", "sector": "Communication Services", "symbol": "VZ"}
+{"active": 1, "exchange": "XNYS", "name": "Wabtec", "sector": "Industrials", "symbol": "WAB"}
+{"active": 1, "exchange": "XNYS", "name": "Waters Corporation", "sector": "Health Care", "symbol": "WAT"}
+{"active": 1, "exchange": "XNYS", "name": "Workday, Inc.", "sector": "Information Technology", "symbol": "WDAY"}
+{"active": 1, "exchange": "XNYS", "name": "Western Digital", "sector": "Information Technology", "symbol": "WDC"}
 {"active": 1, "exchange": "XBRU", "name": "Warehouses De Pauw", "sector": "Real Estate", "symbol": "WDP.BR"}
+{"active": 1, "exchange": "XNYS", "name": "WEC Energy Group", "sector": "Utilities", "symbol": "WEC"}
+{"active": 1, "exchange": "XNYS", "name": "Welltower", "sector": "Real Estate", "symbol": "WELL"}
+{"active": 1, "exchange": "XNYS", "name": "Wells Fargo", "sector": "Financials", "symbol": "WFC"}
+{"active": 1, "exchange": "XNYS", "name": "Waste Management", "sector": "Industrials", "symbol": "WM"}
+{"active": 1, "exchange": "XNYS", "name": "Williams Companies", "sector": "Energy", "symbol": "WMB"}
+{"active": 1, "exchange": "XNYS", "name": "Walmart", "sector": "Consumer Staples", "symbol": "WMT"}
+{"active": 1, "exchange": "XNYS", "name": "W. R. Berkley Corporation", "sector": "Financials", "symbol": "WRB"}
+{"active": 1, "exchange": "XNYS", "name": "Williams-Sonoma, Inc.", "sector": "Consumer Discretionary", "symbol": "WSM"}
+{"active": 1, "exchange": "XNYS", "name": "West Pharmaceutical Services", "sector": "Health Care", "symbol": "WST"}
+{"active": 1, "exchange": "XNYS", "name": "Willis Towers Watson", "sector": "Financials", "symbol": "WTW"}
+{"active": 1, "exchange": "XNYS", "name": "Weyerhaeuser", "sector": "Real Estate", "symbol": "WY"}
+{"active": 1, "exchange": "XNYS", "name": "Wynn Resorts", "sector": "Consumer Discretionary", "symbol": "WYNN"}
+{"active": 1, "exchange": "XNYS", "name": "Xcel Energy", "sector": "Utilities", "symbol": "XEL"}
+{"active": 1, "exchange": "XNYS", "name": "ExxonMobil", "sector": "Energy", "symbol": "XOM"}
+{"active": 1, "exchange": "XNYS", "name": "Xylem Inc.", "sector": "Industrials", "symbol": "XYL"}
+{"active": 1, "exchange": "XNYS", "name": "Block, Inc.", "sector": "Financials", "symbol": "XYZ"}
+{"active": 1, "exchange": "XNYS", "name": "Yum! Brands", "sector": "Consumer Discretionary", "symbol": "YUM"}
+{"active": 1, "exchange": "XNYS", "name": "Zimmer Biomet", "sector": "Health Care", "symbol": "ZBH"}
+{"active": 1, "exchange": "XNYS", "name": "Zebra Technologies", "sector": "Information Technology", "symbol": "ZBRA"}
+{"active": 1, "exchange": "XNYS", "name": "Zoetis", "sector": "Health Care", "symbol": "ZTS"}
 {"active": 1, "exchange": "XSWX", "name": "Zurich Insurance", "sector": "Financials", "symbol": "ZURN.SW"}
