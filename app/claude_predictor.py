@@ -110,11 +110,7 @@ class ClaudePredictor:
 
     def predict_batch(self, run_context: str, rows: str, wanted: list[tuple[str, str]]) -> BatchResult:
         """`wanted` lists (symbol, horizon) pairs. Raises on API errors or unusable output."""
-        pairs = "\n".join(f"{s} {h}" for s, h in wanted)
-        user = (
-            f"Stocks:\n{rows}\n\n"
-            f"Requested predictions ({len(wanted)}), one per line as 'SYMBOL horizon':\n{pairs}"
-        )
+        user = user_message(rows, wanted)
         kwargs = dict(
             model=self.model,
             max_tokens=64000,
@@ -153,21 +149,35 @@ class ClaudePredictor:
         text = next((b.text for b in message.content if b.type == "text"), None)
         if not text:
             raise RuntimeError(f"No text in response (stop_reason={message.stop_reason})")
-        try:
-            result = BatchResult.model_validate(json.loads(text))
-        except (json.JSONDecodeError, ValidationError) as exc:
-            raise RuntimeError(f"Unparseable response: {exc}") from exc
+        return parse_result(text, wanted)
 
-        wanted_set = set(wanted)
-        clean, seen = [], set()
-        for c in result.predictions:
-            key = (c.symbol, c.horizon)
-            if key not in wanted_set or key in seen:
-                continue
-            seen.add(key)
-            c.confidence = min(max(c.confidence, 0.5), 0.95)
-            # Keep the expected move consistent with the direction.
-            c.expected_move_pct = abs(c.expected_move_pct) * (1 if c.direction == "UP" else -1)
-            clean.append(c)
-        result.predictions = clean
-        return result
+
+def user_message(rows: str, wanted: list[tuple[str, str]]) -> str:
+    pairs = "\n".join(f"{s} {h}" for s, h in wanted)
+    return (
+        f"Stocks:\n{rows}\n\n"
+        f"Requested predictions ({len(wanted)}), one per line as 'SYMBOL horizon':\n{pairs}"
+    )
+
+
+def parse_result(text: str, wanted: list[tuple[str, str]]) -> BatchResult:
+    """Validate a JSON answer and keep only the requested pairs, with confidence clamped to
+    0.50-0.95 and the expected move's sign matching the direction."""
+    try:
+        result = BatchResult.model_validate(json.loads(text))
+    except (json.JSONDecodeError, ValidationError) as exc:
+        raise RuntimeError(f"Unparseable response: {exc}") from exc
+
+    wanted_set = set(wanted)
+    clean, seen = [], set()
+    for c in result.predictions:
+        key = (c.symbol, c.horizon)
+        if key not in wanted_set or key in seen:
+            continue
+        seen.add(key)
+        c.confidence = min(max(c.confidence, 0.5), 0.95)
+        # Keep the expected move consistent with the direction.
+        c.expected_move_pct = abs(c.expected_move_pct) * (1 if c.direction == "UP" else -1)
+        clean.append(c)
+    result.predictions = clean
+    return result

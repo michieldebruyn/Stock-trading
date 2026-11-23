@@ -135,6 +135,59 @@ def test_predict_then_evaluate(db, monkeypatch):
     assert got == {"AAPL": 1, "KBC.BR": 0}
 
 
+def test_hand_off_export_check_import(db, tmp_path, monkeypatch):
+    """A Claude Code session answers exported batch files instead of the API being called."""
+    from app import predict
+    add_prices(db, "AAPL", "XNYS", date(2026, 6, 1), date(2026, 11, 20))
+    add_prices(db, "KBC.BR", "XBRU", date(2026, 6, 1), date(2026, 11, 20))
+    work = tmp_path / "work"
+    monkeypatch.setattr(predict, "has_opened", lambda ex, d, now: False)
+
+    out = predict.export_batches(work, today=date(2026, 11, 23), fetch=False, force=True)
+    assert out == {"requested": 4, "batches": 1}
+    batch = (work / "batch_01.md").read_text(encoding="utf-8")
+    assert "answer_01.json" in batch and "symbol|name|sector" in batch
+    assert "Return exactly one prediction" in (work / "instructions.md").read_text(encoding="utf-8")
+
+    # Nothing answered yet.
+    res = predict.import_answers(work, "sonnet-test", check=True)
+    assert res["valid"] == 0 and "missing" in res["problems"][0]
+
+    # The session answers only three of the four pairs (plus junk).
+    wanted = [line.split() for line in batch.split("'SYMBOL horizon':\n")[1].strip().splitlines()]
+    # European stocks come first: their market opens before New York.
+    assert wanted == [["KBC.BR", "daily"], ["KBC.BR", "weekly"], ["AAPL", "daily"], ["AAPL", "weekly"]]
+    preds = [{"symbol": s, "horizon": h, "direction": "DOWN", "confidence": 0.3,
+              "expected_move_pct": 0.7, "rationale": "test"} for s, h in wanted[:3]]
+    preds.append({"symbol": "BOGUS", "horizon": "daily", "direction": "UP", "confidence": 0.6,
+                  "expected_move_pct": 1, "rationale": "x"})
+    (work / "answer_01.json").write_text(json.dumps({"market_view": "soft", "predictions": preds}))
+    res = predict.import_answers(work, "sonnet-test", check=True)
+    assert res["valid"] == 3 and "1 of 4 requested pairs missing: AAPL weekly" in res["problems"][0]
+    assert db.execute("SELECT COUNT(*) FROM predictions").fetchone()[0] == 0  # check stores nothing
+
+    # A market that opened since the export gets no calls.
+    monkeypatch.setattr(predict, "has_opened", lambda ex, d, now: ex == "XBRU")
+    res = predict.import_answers(work, "sonnet-test")
+    assert res["stored"] == 1 and res["status"] == "partial"   # only AAPL daily
+    assert {r[0] for r in db.execute("SELECT symbol FROM predictions")} == {"AAPL"}
+
+    # Importing again adds only what is new and never duplicates.
+    monkeypatch.setattr(predict, "has_opened", lambda ex, d, now: False)
+    res = predict.import_answers(work, "sonnet-test")
+    rows = db.execute("SELECT * FROM predictions").fetchall()
+    assert len(rows) == 3 and res["stored"] == 2
+    assert all(r["confidence"] == 0.5 and r["expected_move_pct"] == -0.7 for r in rows)
+    assert {r["model"] for r in rows} == {"sonnet-test"}
+    view = db.execute("SELECT market_view FROM runs ORDER BY id DESC").fetchone()[0]
+    assert view == "soft"
+
+    # A third import has nothing new and leaves no empty run behind.
+    res = predict.import_answers(work, "sonnet-test")
+    assert res["status"] == "already imported"
+    assert db.execute("SELECT COUNT(*) FROM runs").fetchone()[0] == 2
+
+
 def test_website_renders(db):
     from fastapi.testclient import TestClient
     from app.web.main import app

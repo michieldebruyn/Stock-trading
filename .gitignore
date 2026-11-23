@@ -6,3 +6,4 @@ data/*.db-*
 logs/
 .env
 .pytest_cache/
+work/

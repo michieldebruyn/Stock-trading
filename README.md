@@ -105,18 +105,27 @@ be on. A cloud run starts from a fresh checkout, so the app's records (predictio
 tickers) are kept in Git on the `claude/stock-data` branch as JSON-lines files, one file per
 month for predictions and scores. Prices aren't stored; each run downloads them again.
 
-Each routine runs:
+In the cloud the **routine's own Claude (Sonnet 5.5) makes the predictions**, so no API key is
+needed. The morning routine runs:
 
 ```bash
 pip install -r requirements.txt
-python scripts/state.py pull                     # load the saved records
-python -m app.universe refresh                   # morning only
-python -m app.predict                            # or: python -m app.evaluate
+python scripts/state.py pull                          # load the saved records
+python -m app.universe refresh
+python -m app.predict --export-batches work/          # same prompt and data as the API version
+#   ...Claude reads work/instructions.md and writes work/answer_NN.json for each batch...
+python -m app.predict --check-answers work/           # validate
+python -m app.predict --import-answers work/          # store the calls
 python scripts/state.py push -m "predict 2026-11-24"
 ```
 
-The cloud environment needs `ANTHROPIC_API_KEY` set as an environment variable, and network
-access to Yahoo Finance, Wikipedia (the S&P 500 list), PyPI and the Anthropic API.
+The evening routine runs `pull`, `python -m app.evaluate` and `push`. European stocks come first
+in the batches because their markets open first; a call for a market that has opened by import
+time is discarded, so no call is made with knowledge of the session it predicts. Calls made this
+way are recorded with the model `claude-sonnet-5-5 (Claude Code)`.
+
+The cloud environment needs network access to Yahoo Finance, Wikipedia (the S&P 500 list) and
+PyPI.
 
 To see the cloud results in your local dashboard, pull them into your database and start the
 site without the local scheduler (so it doesn't make its own, conflicting predictions):
