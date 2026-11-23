@@ -4,17 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Stock Predictions{% endblock %}</title>
+  <script>window.SITE = {{ {'root': root, 'static': static_site}|tojson }};</script>
   <link rel="stylesheet" href="{{ static_url('style.css') }}">
   <script src="{{ static_url('chart.umd.js') }}"></script>
   <script src="{{ static_url('charts.js') }}"></script>
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="/">Stock Predictions</a>
+  <a class="brand" href="{{ url('/') }}">Stock Predictions</a>
   <nav>
-    <a href="/" class="{{ 'on' if page == 'dashboard' }}">Dashboard</a>
-    <a href="/predictions" class="{{ 'on' if page == 'predictions' }}">Predictions</a>
-    <a href="/accuracy" class="{{ 'on' if page == 'accuracy' }}">Accuracy</a>
+    <a href="{{ url('/') }}" class="{{ 'on' if page == 'dashboard' }}">Dashboard</a>
+    <a href="{{ url('/predictions') }}" class="{{ 'on' if page == 'predictions' }}">Predictions</a>
+    <a href="{{ url('/accuracy') }}" class="{{ 'on' if page == 'accuracy' }}">Accuracy</a>
   </nav>
   <form id="ticker-search" class="search" autocomplete="off">
     <input name="q" placeholder="Search stock or ticker, e.g. KBC or Apple" aria-label="Search stocks"
@@ -24,6 +25,9 @@
 </header>
 <main>
 {% block content %}{% endblock %}
+{% if static_site %}
+<p class="sub" style="margin-top:32px;font-size:12px">Snapshot of the stock prediction app, updated after the morning and evening jobs. Last updated {{ built_at }}. Not financial advice.</p>
+{% endif %}
 </main>
 <script src="{{ static_url('search.js') }}"></script>
 </body>

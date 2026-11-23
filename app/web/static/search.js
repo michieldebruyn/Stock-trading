@@ -11,7 +11,7 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   function load() {
-    loading = loading || fetch('/api/tickers').then((r) => r.json()).then((rows) => {
+    loading = loading || fetch(apiUrl('/api/tickers')).then((r) => r.json()).then((rows) => {
       tickers = rows.map((t) => ({ ...t, _sym: norm(t.symbol), _name: norm(t.name) }));
       return tickers;
     }).catch(() => { loading = null; return []; });
@@ -69,7 +69,7 @@
     input.setAttribute('aria-expanded', String(on));
   }
 
-  function go(symbol) { location = '/ticker/' + encodeURIComponent(symbol); }
+  function go(symbol) { location = pageUrl('/ticker/' + encodeURIComponent(symbol)); }
 
   input.addEventListener('focus', async () => { await load(); render(); });
   input.addEventListener('input', async () => { await load(); render(); });

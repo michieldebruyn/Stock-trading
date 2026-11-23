@@ -51,6 +51,7 @@
     </div>
     <div class="chart-box"><canvas id="price"></canvas></div>
   </div>
+  {% if not static_site %}
   <div class="card">
     <h2>Today, live <span class="muted" id="live-note" style="font-weight:400"></span></h2>
     <div class="legend">
@@ -59,6 +60,7 @@
     </div>
     <div class="chart-box"><canvas id="intraday"></canvas></div>
   </div>
+  {% endif %}
 </div>
 
 <div class="card section">
@@ -100,7 +102,8 @@
   rangeChart(document.getElementById('pricechart'), {{ t.symbol|tojson }},
              document.querySelector('.seg'), document.getElementById('pc-note'), document.getElementById('pc-foot'));
   priceChart(document.getElementById('price'), {{ t.symbol|tojson }});
-  {% if cur %}
+  {% if static_site %}
+  {% elif cur %}
   intradayChart(document.getElementById('intraday'), {{ t.symbol|tojson }}, {{ cur.base_close }}, {{ cur.direction|tojson }})
     .then(r => { if (r) {
       const on = (r.change > 0) === ({{ cur.direction|tojson }} === 'UP');

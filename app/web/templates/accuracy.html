@@ -5,9 +5,15 @@
 <p class="sub">How often Claude's direction calls were right over the last {{ days }} days. 50% is what a coin flip gets.</p>
 
 <form class="filters" method="get">
-  <select name="days" onchange="this.form.submit()">
-    {% for d in [30, 90, 180, 365, 3650] %}<option value="{{ d }}" {{ 'selected' if d == days }}>{{ 'All time' if d == 3650 else 'Last ' ~ d ~ ' days' }}</option>{% endfor %}
+  {% if static_site %}
+  <select aria-label="Period" onchange="location = this.value">
+    {% for d in accuracy_days %}<option value="{{ url('/accuracy', days=d) }}" {{ 'selected' if d == days }}>{{ 'All time' if d == 3650 else 'Last ' ~ d ~ ' days' }}</option>{% endfor %}
   </select>
+  {% else %}
+  <select name="days" onchange="this.form.submit()">
+    {% for d in accuracy_days %}<option value="{{ d }}" {{ 'selected' if d == days }}>{{ 'All time' if d == 3650 else 'Last ' ~ d ~ ' days' }}</option>{% endfor %}
+  </select>
+  {% endif %}
 </form>
 
 <div class="card table-wrap">
@@ -55,14 +61,14 @@
   <div class="card">
     <h2>Most predictable stocks (daily, at least 5 calls)</h2>
     <table><thead><tr><th>Ticker</th><th>Name</th><th class="num">Right</th><th class="num">Calls</th></tr></thead>
-      <tbody>{% for r in best %}<tr><td><a href="/ticker/{{ r.symbol }}">{{ r.symbol }}</a></td><td>{{ r.name }}</td>
+      <tbody>{% for r in best %}<tr><td><a href="{{ url('/ticker/' ~ r.symbol) }}">{{ r.symbol }}</a></td><td>{{ r.name }}</td>
         <td class="num">{{ r.rate|pct }}</td><td class="num">{{ r.n }}</td></tr>{% endfor %}</tbody></table>
   </div>
   {% if worst %}
   <div class="card">
     <h2>Least predictable stocks</h2>
     <table><thead><tr><th>Ticker</th><th>Name</th><th class="num">Right</th><th class="num">Calls</th></tr></thead>
-      <tbody>{% for r in worst %}<tr><td><a href="/ticker/{{ r.symbol }}">{{ r.symbol }}</a></td><td>{{ r.name }}</td>
+      <tbody>{% for r in worst %}<tr><td><a href="{{ url('/ticker/' ~ r.symbol) }}">{{ r.symbol }}</a></td><td>{{ r.name }}</td>
         <td class="num">{{ r.rate|pct }}</td><td class="num">{{ r.n }}</td></tr>{% endfor %}</tbody></table>
   </div>
   {% endif %}

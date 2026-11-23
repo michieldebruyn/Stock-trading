@@ -1,6 +1,24 @@
 // Chart helpers. Colors come from CSS custom properties so light/dark mode stay in sync.
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
+// API address. The local server answers /api/... with query strings; the static GitHub Pages
+// build stores each answer as a file: /api/ticker/KBC.BR/chart?range=1d -> <root>/api/ticker/KBC.BR/chart-1d.json
+function apiUrl(path, params = {}) {
+  const site = window.SITE || { root: '', static: false };
+  if (!site.static) {
+    const q = new URLSearchParams(params).toString();
+    return path + (q ? '?' + q : '');
+  }
+  const vals = Object.values(params);
+  return site.root + path + (vals.length ? '-' + vals.join('-') : '') + '.json';
+}
+
+// Link to a page of this site (same rules as url() in app/web/main.py).
+function pageUrl(path) {
+  const site = window.SITE || { root: '', static: false };
+  return site.static ? site.root + path.replace(/\/?$/, '/') : path;
+}
+
 function baseOptions() {
   const grid = css('--grid'), text = css('--text-2');
   Chart.defaults.color = text;
@@ -17,7 +35,7 @@ function baseOptions() {
 }
 
 async function priceChart(canvas, symbol, horizon = 'daily') {
-  const res = await (await fetch(`/api/ticker/${encodeURIComponent(symbol)}/history?days=180`)).json();
+  const res = await (await fetch(apiUrl(`/api/ticker/${encodeURIComponent(symbol)}/history`, { days: 180 }))).json();
   if (!res.prices.length) { canvas.parentElement.innerHTML = '<div class="empty">No price data yet.</div>'; return; }
   const labels = res.prices.map(p => p.date);
   const closeByDate = Object.fromEntries(res.prices.map(p => [p.date, p.close]));
@@ -72,7 +90,7 @@ function rangeChart(canvas, symbol, seg, note, foot) {
     const mine = ++seq;
     buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.range === range)));
     try { localStorage.setItem('chartRange', range); } catch (e) { /* storage unavailable */ }
-    const res = await (await fetch(`/api/ticker/${encodeURIComponent(symbol)}/chart?range=${range}`)).json();
+    const res = await (await fetch(apiUrl(`/api/ticker/${encodeURIComponent(symbol)}/chart`, { range }))).json();
     if (mine !== seq) return;               // a newer click won
     if (chart) { chart.destroy(); chart = null; }
     if (!res.points.length) {
@@ -155,7 +173,7 @@ function rolling(series, window) {
 }
 
 async function accuracyCharts(lineCanvas, calibCanvas, horizon, days) {
-  const res = await (await fetch(`/api/accuracy/series?horizon=${horizon}&days=${days}`)).json();
+  const res = await (await fetch(apiUrl('/api/accuracy/series', { horizon, days }))).json();
   const keys = ['sp500', 'europe', 'bel20'];
   const colors = { sp500: css('--series-1'), europe: css('--series-2'), bel20: css('--series-3') };
   const allDates = [...new Set(keys.flatMap(k => res.series[k].map(s => s.d)))].sort();

@@ -1,0 +1,63 @@
+# Publish the website to GitHub Pages as a static snapshot.
+#
+# It loads the latest records from the claude/stock-data branch (written by the morning and
+# evening cloud routines), renders every page with scripts/build_site.py and deploys the result.
+# One-time setup on GitHub: Settings > Pages > Source: "GitHub Actions". Scheduled runs only
+# happen when this file is on the repository's default branch.
+name: Publish website
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "15 8 * * 1-5"    # after the morning predictions (routine starts 05:30 UTC)
+    - cron: "15 22 * * 1-5"   # after the evening scoring (routine starts 21:45 UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Load the latest records from claude/stock-data
+        run: python scripts/state.py pull
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build the static site
+        run: python scripts/build_site.py --out _site --root "${{ steps.pages.outputs.base_path }}"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

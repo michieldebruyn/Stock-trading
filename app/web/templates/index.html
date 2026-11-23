@@ -11,8 +11,12 @@
 
 {% if not run %}
 <div class="card empty">
+  {% if static_site %}
+  No predictions yet. The first ones appear here after the next morning run (weekdays, before the markets open).
+  {% else %}
   Nothing here yet. Run <code>python -m app.predict</code> in the morning and <code>python -m app.evaluate</code>
   in the evening, or start <code>python -m app.serve</code> to run both on schedule.
+  {% endif %}
 </div>
 {% endif %}
 
@@ -55,7 +59,7 @@
     {% endif %}
     <div class="kv"><span>Daily, 30 days</span><span>{{ c.daily30.rate|pct }} <span class="muted">(n={{ c.daily30.n }})</span></span></div>
     <div class="kv"><span>Weekly, 90 days</span><span>{{ c.weekly90.rate|pct }} <span class="muted">(n={{ c.weekly90.n }})</span></span></div>
-    <div class="kv"><span></span><a href="/predictions?universe={{ c.key }}">View calls →</a></div>
+    <div class="kv"><span></span><a href="{{ url('/predictions', universe=c.key) }}">View calls →</a></div>
   </div>
   {% endfor %}
 </div>
@@ -76,7 +80,7 @@
     <tbody>
     {% for r in top %}
       <tr>
-        <td><a href="/ticker/{{ r.symbol }}">{{ r.symbol }}</a></td>
+        <td><a href="{{ url('/ticker/' ~ r.symbol) }}">{{ r.symbol }}</a></td>
         <td>{{ r.name }}</td>
         <td>{{ dir(r.direction) }}</td>
         <td class="num">{{ '%.0f'|format(r.confidence * 100) }}%</td>

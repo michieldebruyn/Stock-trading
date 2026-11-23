@@ -22,21 +22,63 @@ templates = Jinja2Templates(directory=HERE / "templates")
 log = logging.getLogger(__name__)
 
 UNIVERSES = {"sp500": "S&P 500", "europe": "Europe large caps", "bel20": "BEL20"}
+ACCURACY_DAYS = (30, 90, 180, 365, 3650)
 
 
 def _pct(v):
     return "–" if v is None else f"{v * 100:.1f}%"
 
 
+# How links are written. The local server uses plain paths with query strings. The static
+# GitHub Pages build (scripts/build_site.py) calls configure_site(): every link then gets the
+# site's base path, query parameters become folders (/accuracy?days=30 -> /accuracy/days-30/),
+# and the predictions page's market/result filters move to the URL hash, where the page filters
+# rows in the browser.
+SITE = {"root": "", "static": False}
+HASH_PARAMS = ("universe", "result")
+
+
+def configure_site(root: str = "", static: bool = False) -> None:
+    SITE.update(root=root.rstrip("/"), static=static)
+    templates.env.globals.update(root=SITE["root"], static_site=static)
+
+
+def static_page_path(path: str, params: dict | None = None) -> str:
+    """Folder (without the base path) that holds a page in the static build, plus any #hash."""
+    params = {k: v for k, v in (params or {}).items() if v not in (None, "")}
+    segs = [f"{k}-{v}" for k, v in params.items() if k not in HASH_PARAMS]
+    folder = "/".join([p for p in path.strip("/").split("/") if p] + segs)
+    out = "/" + folder + ("/" if folder else "")
+    frag = "&".join(f"{k}={params[k]}" for k in HASH_PARAMS if k in params)
+    return out + (f"#{frag}" if frag else "")
+
+
+def url(path: str, **params) -> str:
+    """Link to a page of this site, for templates."""
+    params = {k: v for k, v in params.items() if v not in (None, "")}
+    if not SITE["static"]:
+        from urllib.parse import urlencode
+        return path + (f"?{urlencode(params)}" if params else "")
+    return SITE["root"] + static_page_path(path, params)
+
+
+_static_versions: dict[str, str] = {}
+
+
 def static_url(name: str) -> str:
-    """Static file URL with the file's modification time, so browsers fetch it again after an
+    """Static file URL with a hash of the file's contents, so browsers fetch it again after an
     update instead of running a cached old copy."""
-    path = HERE / "static" / name
-    version = int(path.stat().st_mtime) if path.exists() else 0
-    return f"/static/{name}?v={version}"
+    version = _static_versions.get(name)
+    if version is None:
+        import hashlib
+        path = HERE / "static" / name
+        version = hashlib.md5(path.read_bytes()).hexdigest()[:10] if path.exists() else "0"
+        if SITE["static"]:              # a static build renders 600 pages: hash each file once
+            _static_versions[name] = version
+    return f"{SITE['root']}/static/{name}?v={version}"
 
 
-templates.env.globals["static_url"] = static_url
+templates.env.globals.update(static_url=static_url, url=url, root="", static_site=False)
 templates.env.filters["pct"] = _pct
 templates.env.filters["signed"] = lambda v: "–" if v is None else f"{v:+.2f}%"
 
@@ -52,6 +94,7 @@ def _latest_made_on(conn, horizon: str) -> str | None:
 def _prediction_rows(conn, horizon: str, made_on: str | None, universe: str | None = None,
                      symbol: str | None = None, limit: int | None = None):
     sql = """SELECT p.*, t.name, t.sector, e.actual_close, e.actual_change_pct, e.correct,
+                    (SELECT GROUP_CONCAT(universe) FROM ticker_universes u WHERE u.symbol = p.symbol) AS unis,
                     (SELECT close FROM prices pr WHERE pr.symbol = p.symbol
                        ORDER BY date DESC LIMIT 1) AS latest_close,
                     (SELECT date FROM prices pr WHERE pr.symbol = p.symbol
@@ -75,6 +118,7 @@ def _prediction_rows(conn, horizon: str, made_on: str | None, universe: str | No
     rows = []
     for r in conn.execute(sql, params):
         d = dict(r)
+        d["tracking_pct"] = None
         if d["correct"] is None and d["latest_close"] and d["latest_date"] and d["latest_date"] > d["base_date"]:
             # Not scored yet, but newer prices exist: show how the call is tracking.
             d["tracking_pct"] = (d["latest_close"] / d["base_close"] - 1) * 100
@@ -189,7 +233,7 @@ def accuracy_page(request: Request, days: int = 90):
             table.append(row)
         best = stats.ticker_ranking(conn, "daily", since)
     return templates.TemplateResponse(request, "accuracy.html", {
-        "table": table, "universes": UNIVERSES, "days": days,
+        "table": table, "universes": UNIVERSES, "days": days, "accuracy_days": ACCURACY_DAYS,
         "best": best[:10], "worst": list(reversed(best[-10:])) if len(best) > 10 else [],
         "page": "accuracy",
     })

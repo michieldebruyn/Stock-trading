@@ -286,6 +286,46 @@ def test_tickers_api_for_search(db):
     assert kbc["close"] is None
 
 
+def test_static_site_build(db, tmp_path):
+    import importlib.util
+    from app import predict
+    from app.claude_predictor import ClaudePredictor
+    from app.web import main
+    add_prices(db, "AAPL", "XNYS", date(2026, 6, 1), date(2026, 11, 20))
+    add_prices(db, "KBC.BR", "XBRU", date(2026, 6, 1), date(2026, 11, 20))
+    predict.run(today=date(2026, 11, 23), fetch=False, force=True,
+                predictor=ClaudePredictor("claude-opus-5-5", client=FakeClient()))
+    spec = importlib.util.spec_from_file_location(
+        "build_site", os.path.join(os.path.dirname(__file__), "..", "scripts", "build_site.py"))
+    build_site = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build_site)
+    try:
+        counts = build_site.build(tmp_path / "site", root="/Stock-trading")
+        site = tmp_path / "site"
+        for f in ["index.html", "predictions/index.html", "predictions/horizon-daily/made_on-2026-11-23/index.html",
+                  "predictions/horizon-weekly/index.html", "accuracy/days-30/index.html",
+                  "ticker/KBC.BR/index.html", "api/tickers.json", "api/ticker/KBC.BR/chart-1w.json",
+                  "api/ticker/AAPL/history-180.json", "api/accuracy/series-daily-90.json",
+                  "static/charts.js", ".nojekyll", "404.html"]:
+            assert (site / f).exists(), f
+        home = (site / "index.html").read_text(encoding="utf-8")
+        assert 'href="/Stock-trading/predictions/"' in home
+        assert 'href="/Stock-trading/predictions/#universe=bel20"' in home
+        assert '/Stock-trading/static/style.css?v=' in home
+        assert '"static": true' in home and 'href="/predictions' not in home
+        ticker = (site / "ticker" / "AAPL" / "index.html").read_text(encoding="utf-8")
+        assert "Today, live" not in ticker                      # live Yahoo chart left out
+        preds = (site / "predictions" / "index.html").read_text(encoding="utf-8")
+        assert "Load live prices" not in preds and 'data-unis="sp500"' in preds
+        assert counts["pages"] >= 10
+    finally:
+        main.configure_site("", static=False)
+        main._static_versions.clear()
+    # The local server is back to plain links.
+    from fastapi.testclient import TestClient
+    assert 'href="/predictions"' in TestClient(main.app).get("/").text
+
+
 def test_website_renders(db):
     from fastapi.testclient import TestClient
     from app.web.main import app

@@ -1,7 +1,7 @@
 {% macro result(r) -%}
   {%- if r.correct == 1 -%}<span class="pill ok">✓ right</span>
   {%- elif r.correct == 0 -%}<span class="pill bad">✗ wrong</span>
-  {%- elif r.tracking_pct is defined -%}
+  {%- elif r.tracking_pct is not none -%}
     {%- set on = (r.tracking_pct > 0) == (r.direction == 'UP') -%}
     <span class="pill {{ 'ok' if on else 'bad' }}" title="Not final yet: compared with the latest close">tracking {{ '✓' if on else '✗' }}</span>
   {%- else -%}<span class="pill">pending</span>
