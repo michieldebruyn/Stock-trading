@@ -102,8 +102,9 @@ Prefer cron instead of the built-in scheduler? Start the site with
 
 Two Claude Code cloud routines can run the jobs instead of your computer, so it doesn't have to
 be on. A cloud run starts from a fresh checkout, so the app's records (predictions, scores, runs,
-tickers) are kept in Git on the `claude/stock-data` branch as JSON-lines files, one file per
-month for predictions and scores. Prices aren't stored; each run downloads them again.
+tickers and prices) are kept in Git on the `claude/stock-data` branch as JSON-lines files: one
+file per month for predictions, scores and daily prices, one file per day for the 15-minute
+intraday prices (the last two weeks). Each run only downloads the most recent prices.
 
 In the cloud the **routine's own Claude (Sonnet 5.5) makes the predictions**, so no API key is
 needed. The morning routine runs:
@@ -159,7 +160,7 @@ never touched.
 |---|---|
 | **Dashboard** | Overall daily/weekly accuracy, per-market cards (up/down split of today's calls, hit rates), Claude's market view, today's highest-confidence calls |
 | **Predictions** | Every call for a date, filterable by market and result, with a **Load live prices** button that shows whether each open call is on track right now |
-| **Ticker** (search box) | 6-month price chart with every call marked ▲/▼ in green (right) or red (wrong), today's intraday price against the base close, full daily and weekly history with rationales |
+| **Ticker** (search box) | Price chart with **1D / 1W / 1M** buttons (15-minute prices for 1D and 1W, daily closes for 1M, all saved by the morning and evening jobs), 6-month price chart with every call marked ▲/▼ in green (right) or red (wrong), today's live intraday price against the base close, full daily and weekly history with rationales |
 | **Accuracy** | Hit rate by market and horizon, rolling hit rate vs the 50% coin flip, calibration chart (does "70% confident" mean right 70% of the time?), most/least predictable stocks |
 
 ## Configuration (`config.yaml`)
@@ -185,6 +186,7 @@ SQLite at `data/stocks.db` (open it with any SQLite browser).
 |---|---|
 | `tickers`, `ticker_universes` | Symbols, names, exchange, and which universe(s) each belongs to |
 | `prices` | Daily OHLCV (split/dividend adjusted) for tickers and market-context symbols |
+| `intraday` | 15-minute closes per stock per day (last two weeks), refreshed by both daily jobs, for the 1D / 1W charts |
 | `predictions` | One row per call: horizon, target date, base close, direction, confidence, expected move, rationale. Written once in the morning, never changed |
 | `evaluations` | Actual close, % change, actual direction, right/wrong |
 | `runs` | Each job run: status, token usage, Claude's market view, errors |

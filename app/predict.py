@@ -120,7 +120,7 @@ def _prepare(today: date | None, fetch: bool, force: bool):
 
     if fetch:
         universe.sync()
-        prices.update()
+        prices.refresh()
 
     with session() as conn:
         jobs, feats, meta, skipped = plan(conn, today, now_utc, force)

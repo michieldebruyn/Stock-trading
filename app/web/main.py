@@ -28,6 +28,15 @@ def _pct(v):
     return "–" if v is None else f"{v * 100:.1f}%"
 
 
+def static_url(name: str) -> str:
+    """Static file URL with the file's modification time, so browsers fetch it again after an
+    update instead of running a cached old copy."""
+    path = HERE / "static" / name
+    version = int(path.stat().st_mtime) if path.exists() else 0
+    return f"/static/{name}?v={version}"
+
+
+templates.env.globals["static_url"] = static_url
 templates.env.filters["pct"] = _pct
 templates.env.filters["signed"] = lambda v: "–" if v is None else f"{v:+.2f}%"
 
@@ -200,6 +209,46 @@ def api_history(symbol: str, days: int = 180):
                FROM predictions p LEFT JOIN evaluations e ON e.prediction_id = p.id
                WHERE p.symbol=? AND p.target_date>=? ORDER BY p.target_date""", (symbol, since))]
     return {"prices": px, "predictions": preds}
+
+
+CHART_RANGES = {"1d": 1, "1w": 5, "1m": 31}   # 1d/1w: trading days of intraday bars; 1m: calendar days
+
+
+@app.get("/api/ticker/{symbol}/chart")
+def api_chart(symbol: str, range: str = "1d"):  # noqa: A002 - matches the query parameter
+    """Stored prices for the price chart: 15-minute bars for 1d / 1w, daily closes for 1m.
+
+    `base` is the close before the first point, so the change shown is over the whole range."""
+    if range not in CHART_RANGES:
+        raise HTTPException(400, "range must be 1d, 1w or 1m")
+    import json
+    with connect() as conn:
+        points, kind, first_day = [], "daily", None
+        if range in ("1d", "1w"):
+            days = conn.execute(
+                "SELECT date, bars FROM intraday WHERE symbol=? ORDER BY date DESC LIMIT ?",
+                (symbol, CHART_RANGES[range])).fetchall()[::-1]
+            if days:
+                kind = "intraday"
+                points = [{"t": ts * 1000, "close": c} for d in days for ts, c in json.loads(d["bars"])]
+                first_day = days[0]["date"]
+        if not points:
+            # No intraday bars stored (yet): fall back to daily closes (1d/1w: the last week).
+            since = (today() - timedelta(days=31 if range == "1m" else 8)).isoformat()
+            rows = conn.execute("SELECT date, close FROM prices WHERE symbol=? AND date>=? ORDER BY date",
+                                (symbol, since)).fetchall()
+            points = [{"d": r["date"], "close": r["close"]} for r in rows]
+            first_day = rows[0]["date"] if rows else None
+        base = None
+        if first_day:
+            b = conn.execute("SELECT close FROM prices WHERE symbol=? AND date<? ORDER BY date DESC LIMIT 1",
+                             (symbol, first_day)).fetchone()
+            base = b["close"] if b else None
+    last = points[-1]["close"] if points else None
+    return {
+        "range": range, "kind": kind, "points": points, "base": base, "last": last,
+        "change_pct": ((last / base - 1) * 100) if last and base else None,
+    }
 
 
 _live_cache: dict[str, tuple[float, dict]] = {}

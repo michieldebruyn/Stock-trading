@@ -75,6 +75,16 @@ CREATE TABLE IF NOT EXISTS evaluations (
     evaluated_at      TEXT NOT NULL
 );
 
+-- Intraday price bars, one row per symbol per trading day (local date), for the 1D / 1W charts.
+-- Refreshed by both daily jobs; only the last couple of weeks are kept.
+CREATE TABLE IF NOT EXISTS intraday (
+    symbol   TEXT NOT NULL,
+    date     TEXT NOT NULL,              -- YYYY-MM-DD in the configured timezone
+    interval TEXT NOT NULL DEFAULT '15m',
+    bars     TEXT NOT NULL,              -- JSON [[unix_seconds, close], ...]
+    PRIMARY KEY (symbol, date)
+);
+
 CREATE INDEX IF NOT EXISTS idx_pred_target ON predictions(target_date);
 CREATE INDEX IF NOT EXISTS idx_pred_made   ON predictions(made_on, horizon);
 CREATE INDEX IF NOT EXISTS idx_prices_date ON prices(date);

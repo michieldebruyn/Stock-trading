@@ -1,20 +1,24 @@
-"""Daily price download from Yahoo Finance into the `prices` table.
+"""Price download from Yahoo Finance: daily bars into `prices`, 15-minute bars into `intraday`.
 
-    python -m app.prices            # update all active tickers + context symbols
-    python -m app.prices --years 2  # backfill two years of history
+    python -m app.prices            # update daily + intraday prices for all active tickers
+    python -m app.prices --years 2  # backfill two years of daily history
 """
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sqlite3
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 import pandas as pd
 import yfinance as yf
 
-from .config import get_config
+from .config import get_config, local_tz
 from .db import session
+
+INTRADAY_INTERVAL = "15m"
+INTRADAY_KEEP_DAYS = 14   # calendar days of intraday bars kept (about two trading weeks)
 
 log = logging.getLogger(__name__)
 
@@ -96,6 +100,59 @@ def update(symbols: list[str] | None = None, years: float | None = None) -> int:
     return written
 
 
+def update_intraday(symbols: list[str] | None = None, period: str = "5d", chunk: int = 100) -> int:
+    """Store 15-minute closes for the last few trading days, one row per symbol per day.
+
+    Days are grouped by date in the configured timezone. Rows older than INTRADAY_KEEP_DAYS
+    are removed. Returns the number of symbol-days written."""
+    if symbols is None:
+        with session() as conn:
+            symbols = [r[0] for r in conn.execute("SELECT symbol FROM tickers WHERE active=1")]
+    tz = local_tz()
+    rows = []
+    for i in range(0, len(symbols), chunk):
+        batch = symbols[i:i + chunk]
+        data = yf.download(batch, period=period, interval=INTRADAY_INTERVAL, auto_adjust=True,
+                           group_by="ticker", progress=False, threads=True)
+        if data is None or data.empty:
+            continue
+        for sym in batch:
+            try:
+                df = data[sym] if isinstance(data.columns, pd.MultiIndex) else data
+                closes = df["Close"].dropna()
+            except KeyError:
+                continue
+            if closes.empty:
+                continue
+            idx = closes.index
+            idx = idx.tz_localize("UTC") if idx.tz is None else idx.tz_convert("UTC")
+            by_day: dict[str, list] = {}
+            for ts, c in zip(idx, closes.to_numpy()):
+                day = ts.tz_convert(tz).date().isoformat()
+                by_day.setdefault(day, []).append([int(ts.timestamp()), round(float(c), 4)])
+            rows += [(sym, day, INTRADAY_INTERVAL, json.dumps(bars, separators=(",", ":")))
+                     for day, bars in by_day.items()]
+    cutoff = (datetime.now(tz).date() - timedelta(days=INTRADAY_KEEP_DAYS)).isoformat()
+    with session() as conn:
+        conn.executemany(
+            """INSERT INTO intraday(symbol, date, interval, bars) VALUES (?,?,?,?)
+               ON CONFLICT(symbol, date) DO UPDATE SET interval=excluded.interval, bars=excluded.bars""",
+            rows)
+        conn.execute("DELETE FROM intraday WHERE date < ?", (cutoff,))
+    log.info("Wrote intraday bars for %d symbol-days", len(rows))
+    return len(rows)
+
+
+def refresh() -> int:
+    """What both daily jobs run: daily bars (must succeed) and intraday bars (best effort)."""
+    written = update()
+    try:
+        update_intraday()
+    except Exception as exc:  # noqa: BLE001 - charts only; never fail a job over it
+        log.warning("Intraday update failed: %s", exc)
+    return written
+
+
 _intraday_cache: dict[str, tuple[float, list[dict]]] = {}
 
 
@@ -118,3 +175,4 @@ if __name__ == "__main__":
     p.add_argument("--years", type=float, help="backfill this many years of history")
     args = p.parse_args()
     update(years=args.years)
+    update_intraday()

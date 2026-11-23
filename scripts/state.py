@@ -1,8 +1,9 @@
-"""Keep the app's own records (predictions, scores, runs, tickers) in Git so cloud runs, which start
-from a fresh checkout every time, can carry them from one run to the next.
+"""Keep the app's records (predictions, scores, runs, tickers, prices) in Git so cloud runs, which
+start from a fresh checkout every time, can carry them from one run to the next.
 
 The records live as JSON-lines files under `state/` on their own branch (default
-`claude/stock-data`), apart from the code. Prices are not stored: the jobs re-download them.
+`claude/stock-data`), apart from the code. Daily prices are stored one file per month and the
+15-minute intraday bars one file per day, so a run only refreshes recent prices.
 
     python scripts/state.py pull                 # load saved records from origin into the database
     python scripts/state.py push -m "message"    # save the database's records to origin
@@ -36,6 +37,8 @@ TABLES: dict[str, tuple[str, ...]] = {
     "runs": ("id",),
     "predictions": ("id",),
     "evaluations": ("prediction_id",),
+    "prices": ("symbol", "date"),
+    "intraday": ("symbol", "date"),
 }
 
 
@@ -48,14 +51,18 @@ def git(*args: str, cwd: Path = ROOT, check: bool = True) -> subprocess.Complete
 
 # --- database <-> text ---------------------------------------------------------------------------
 
-APPEND_ONLY = ("runs", "predictions", "evaluations")
+APPEND_ONLY = ("runs", "predictions", "evaluations", "prices")
 
-# Large, ever-growing tables are split into one file per month (of the prediction date) so no
-# single file approaches GitHub's 100 MB limit.
-MONTHLY_SQL = {
-    "predictions": "SELECT substr(made_on, 1, 7) AS _month, * FROM predictions ORDER BY id",
-    "evaluations": ("SELECT substr(p.made_on, 1, 7) AS _month, e.* FROM evaluations e "
+# Large, ever-growing tables are split into parts (`_part` names the file) so no single file
+# approaches GitHub's 100 MB limit and untouched months produce no diff: predictions and scores
+# by month of the prediction date, daily prices by month, intraday bars by day (old days are
+# pruned, so their files disappear).
+PARTITION_SQL = {
+    "predictions": "SELECT substr(made_on, 1, 7) AS _part, * FROM predictions ORDER BY id",
+    "evaluations": ("SELECT substr(p.made_on, 1, 7) AS _part, e.* FROM evaluations e "
                     "JOIN predictions p ON p.id = e.prediction_id ORDER BY e.prediction_id"),
+    "prices": "SELECT substr(date, 1, 7) AS _part, * FROM prices ORDER BY symbol, date",
+    "intraday": "SELECT date AS _part, * FROM intraday ORDER BY symbol",
 }
 
 
@@ -69,13 +76,13 @@ def export_files() -> dict[str, str]:
     conn = connect()
     try:
         for table, pk in TABLES.items():
-            if table in MONTHLY_SQL:
+            if table in PARTITION_SQL:
                 parts: dict[str, list[str]] = {}
-                for r in conn.execute(MONTHLY_SQL[table]):
+                for r in conn.execute(PARTITION_SQL[table]):
                     row = dict(r)
-                    parts.setdefault(row.pop("_month"), []).append(_line(row))
-                for month, lines in parts.items():
-                    out[f"{table}/{month}.jsonl"] = "".join(lines)
+                    parts.setdefault(row.pop("_part"), []).append(_line(row))
+                for part, lines in parts.items():
+                    out[f"{table}/{part}.jsonl"] = "".join(lines)
             else:
                 rows = conn.execute(f"SELECT * FROM {table} ORDER BY {', '.join(pk)}")
                 out[f"{table}.jsonl"] = "".join(_line(dict(r)) for r in rows)

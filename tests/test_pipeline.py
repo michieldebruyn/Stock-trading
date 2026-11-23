@@ -188,11 +188,95 @@ def test_hand_off_export_check_import(db, tmp_path, monkeypatch):
     assert db.execute("SELECT COUNT(*) FROM runs").fetchone()[0] == 2
 
 
+def _fake_intraday_download(symbols):
+    """A yf.download stand-in: 15-minute bars on two days, the way Yahoo returns them."""
+    import pandas as pd
+    idx = pd.DatetimeIndex(
+        list(pd.date_range("2026-11-19 14:30", periods=4, freq="15min", tz="UTC"))
+        + list(pd.date_range("2026-11-20 14:30", periods=4, freq="15min", tz="UTC")))
+    frames = {s: pd.DataFrame({"Close": [100.0 + i for i in range(8)]}, index=idx) for s in symbols}
+    return lambda batch, **kw: pd.concat({s: frames[s] for s in batch}, axis=1)
+
+
+def test_update_intraday_groups_by_day_and_prunes(db, monkeypatch):
+    from app import prices
+    db.execute("INSERT INTO intraday(symbol,date,bars) VALUES ('AAPL','2020-01-02','[]')")  # too old
+    db.commit()
+    monkeypatch.setattr(prices.yf, "download", _fake_intraday_download(["AAPL", "KBC.BR"]))
+    monkeypatch.setattr(prices, "INTRADAY_KEEP_DAYS", 100000)  # keep the 2026 test days whatever today is
+    assert prices.update_intraday(["AAPL", "KBC.BR"]) == 4      # 2 symbols x 2 days
+    rows = db.execute("SELECT symbol, date, bars FROM intraday WHERE date >= '2026-01-01' ORDER BY symbol, date").fetchall()
+    assert [(r[0], r[1]) for r in rows] == [("AAPL", "2026-11-19"), ("AAPL", "2026-11-20"),
+                                            ("KBC.BR", "2026-11-19"), ("KBC.BR", "2026-11-20")]
+    bars = json.loads(rows[1]["bars"])
+    assert bars[0] == [int(datetime(2026, 11, 20, 14, 30, tzinfo=timezone.utc).timestamp()), 104.0]
+    assert len(bars) == 4
+    # Running again replaces rows instead of duplicating them; the 2020 row was pruned.
+    monkeypatch.setattr(prices, "INTRADAY_KEEP_DAYS", 14)
+    prices.update_intraday(["AAPL"])
+    assert db.execute("SELECT COUNT(*) FROM intraday WHERE date < '2021-01-01'").fetchone()[0] == 0
+
+
+def test_chart_api_ranges(db):
+    from fastapi.testclient import TestClient
+    from app.web.main import app
+    add_prices(db, "AAPL", "XNYS", date(2026, 10, 1), date(2026, 11, 20))
+    add_prices(db, "KBC.BR", "XBRU", date(2026, 10, 1), date(2026, 11, 20))
+    t0 = int(datetime(2026, 11, 19, 14, 30, tzinfo=timezone.utc).timestamp())
+    for i, day in enumerate(["2026-11-17", "2026-11-18", "2026-11-19", "2026-11-20"]):
+        bars = [[t0 + i * 86400 + k * 900, 200.0 + i + k] for k in range(3)]
+        db.execute("INSERT INTO intraday(symbol,date,bars) VALUES ('AAPL',?,?)", (day, json.dumps(bars)))
+    db.commit()
+    client = TestClient(app)
+    one = client.get("/api/ticker/AAPL/chart?range=1d").json()
+    assert one["kind"] == "intraday" and len(one["points"]) == 3     # only the latest day
+    prev = db.execute("SELECT close FROM prices WHERE symbol='AAPL' AND date<'2026-11-20' "
+                      "ORDER BY date DESC LIMIT 1").fetchone()[0]
+    assert one["base"] == prev and one["last"] == 205.0
+    assert one["change_pct"] == pytest.approx((205.0 / prev - 1) * 100)
+    week = client.get("/api/ticker/AAPL/chart?range=1w").json()
+    assert len(week["points"]) == 12                                  # all 4 stored days
+    assert [p["t"] for p in week["points"]] == sorted(p["t"] for p in week["points"])
+    month = client.get("/api/ticker/AAPL/chart?range=1m").json()
+    assert month["kind"] == "daily" and all("d" in p for p in month["points"])
+    # No intraday bars stored: daily closes instead.
+    kbc = client.get("/api/ticker/KBC.BR/chart?range=1d").json()
+    assert kbc["kind"] == "daily"
+    assert client.get("/api/ticker/AAPL/chart?range=5y").status_code == 400
+    assert client.get("/api/ticker/NOPE/chart?range=1d").json()["points"] == []
+
+
+def test_state_files_include_prices_and_intraday(db, tmp_path, monkeypatch):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "state", os.path.join(os.path.dirname(__file__), "..", "scripts", "state.py"))
+    state = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(state)
+    add_prices(db, "AAPL", "XNYS", date(2026, 10, 28), date(2026, 11, 20))
+    db.execute("INSERT INTO intraday(symbol,date,bars) VALUES ('AAPL','2026-11-20','[[1,2.5]]')")
+    db.commit()
+    files = state.export_files()
+    assert {"prices/2026-10.jsonl", "prices/2026-11.jsonl", "intraday/2026-11-20.jsonl"} <= set(files)
+    assert "prices" in state.APPEND_ONLY and "intraday" not in state.APPEND_ONLY
+
+    monkeypatch.setenv("STOCKS_DB", str(tmp_path / "copy.db"))
+    from app import config
+    config.get_config.cache_clear()
+    counts = state.import_files(files)
+    assert counts["prices"] == db.execute("SELECT COUNT(*) FROM prices").fetchone()[0]
+    assert counts["intraday"] == 1
+    from app.db import connect
+    copy = connect()
+    assert copy.execute("SELECT bars FROM intraday").fetchone()[0] == "[[1,2.5]]"
+    copy.close()
+
+
 def test_website_renders(db):
     from fastapi.testclient import TestClient
     from app.web.main import app
     client = TestClient(app)
     for url in ["/", "/predictions", "/predictions?horizon=weekly", "/accuracy",
-                "/ticker/AAPL", "/api/accuracy/series", "/api/ticker/AAPL/history"]:
+                "/ticker/AAPL", "/api/accuracy/series", "/api/ticker/AAPL/history",
+                "/api/ticker/AAPL/chart?range=1w"]:
         assert client.get(url).status_code == 200, url
     assert client.get("/ticker/NOPE").status_code == 404

@@ -46,7 +46,7 @@ def run(today: date | None = None, fetch: bool = True) -> dict:
     error = None
     if fetch:
         try:
-            prices.update()
+            prices.refresh()
         except Exception as exc:  # noqa: BLE001 - still score what we can
             error = f"price update failed: {exc}"
             log.error(error)

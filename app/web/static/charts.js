@@ -60,6 +60,62 @@ async function priceChart(canvas, symbol, horizon = 'daily') {
   });
 }
 
+// Price chart with 1D / 1W / 1M buttons, drawn from the prices the daily jobs store.
+function rangeChart(canvas, symbol, seg, note, foot) {
+  let chart = null, seq = 0;
+  const buttons = [...seg.querySelectorAll('button[data-range]')];
+  const fmtTime = (ms) => new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const fmtDayTime = (ms) => new Date(ms).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+  const fmtDay = (ms) => new Date(ms).toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' });
+
+  async function show(range) {
+    const mine = ++seq;
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.range === range)));
+    try { localStorage.setItem('chartRange', range); } catch (e) { /* storage unavailable */ }
+    const res = await (await fetch(`/api/ticker/${encodeURIComponent(symbol)}/chart?range=${range}`)).json();
+    if (mine !== seq) return;               // a newer click won
+    if (chart) { chart.destroy(); chart = null; }
+    if (!res.points.length) {
+      canvas.style.display = 'none';
+      note.textContent = '';
+      foot.textContent = 'No prices stored for this stock yet. They are saved by the morning and evening jobs.';
+      return;
+    }
+    canvas.style.display = '';
+    const intraday = res.kind === 'intraday';
+    const labels = res.points.map(p => intraday
+      ? (range === '1d' ? fmtTime(p.t) : fmtDayTime(p.t))
+      : fmtDay(Date.parse(p.d + 'T12:00:00')));
+    const up = res.change_pct == null ? null : res.change_pct >= 0;
+    const color = up == null ? css('--series-1') : up ? css('--good') : css('--bad');
+    document.getElementById('pc-swatch')?.style.setProperty('background', color);
+    const datasets = [{ label: 'Price', data: res.points.map(p => p.close), borderColor: color, borderWidth: 2,
+                        pointRadius: intraday ? 0 : 2, pointHoverRadius: 4, tension: 0.1 }];
+    if (res.base != null) {
+      datasets.push({ label: 'Previous close', data: labels.map(() => res.base), borderColor: css('--muted'),
+                      borderWidth: 1.5, borderDash: [5, 4], pointRadius: 0, pointHoverRadius: 0 });
+    }
+    const opts = baseOptions();
+    opts.interaction = { mode: 'index', intersect: false };
+    opts.scales.x.ticks.maxTicksLimit = range === '1d' ? 8 : 6;
+    opts.plugins.tooltip.callbacks = { label: (ctx) => `${ctx.dataset.label} ${ctx.parsed.y.toFixed(2)}` };
+    chart = new Chart(canvas, { type: 'line', data: { labels, datasets }, options: opts });
+
+    const span = { '1d': 'last trading day', '1w': 'last 5 trading days', '1m': 'last month' }[range];
+    note.textContent = res.change_pct == null ? `· ${res.last.toFixed(2)}`
+      : `· ${res.last.toFixed(2)} (${res.change_pct >= 0 ? '+' : ''}${res.change_pct.toFixed(2)}% over the ${span})`;
+    const lastAt = intraday ? fmtDayTime(res.points.at(-1).t) : res.points.at(-1).d;
+    foot.textContent = (intraday ? '15-minute prices' : 'Daily closes')
+      + (range !== '1m' && !intraday ? ' (no 15-minute prices stored yet)' : '')
+      + `, saved by the morning and evening jobs; last price ${lastAt}. Times are in your local time.`;
+  }
+
+  buttons.forEach(b => b.addEventListener('click', () => show(b.dataset.range)));
+  let start = '1d';
+  try { start = localStorage.getItem('chartRange') || '1d'; } catch (e) { /* storage unavailable */ }
+  show(buttons.some(b => b.dataset.range === start) ? start : '1d');
+}
+
 async function intradayChart(canvas, symbol, baseClose, direction) {
   const res = await (await fetch(`/api/ticker/${encodeURIComponent(symbol)}/intraday`)).json();
   if (!res.bars || !res.bars.length) {
