@@ -1,0 +1,72 @@
+{"active": 1, "exchange": "XSWX", "name": "ABB", "sector": "Industrials", "symbol": "ABBN.SW"}
+{"active": 1, "exchange": "XBRU", "name": "AB InBev", "sector": "Consumer Staples", "symbol": "ABI.BR"}
+{"active": 1, "exchange": "XBRU", "name": "Ackermans & van Haaren", "sector": "Financials", "symbol": "ACKB.BR"}
+{"active": 1, "exchange": "XAMS", "name": "Adyen", "sector": "Financials", "symbol": "ADYEN.AS"}
+{"active": 1, "exchange": "XBRU", "name": "Aedifica", "sector": "Real Estate", "symbol": "AED.BR"}
+{"active": 1, "exchange": "XBRU", "name": "Ageas", "sector": "Financials", "symbol": "AGS.BR"}
+{"active": 1, "exchange": "XPAR", "name": "Airbus", "sector": "Industrials", "symbol": "AIR.PA"}
+{"active": 1, "exchange": "XETR", "name": "Allianz", "sector": "Financials", "symbol": "ALV.DE"}
+{"active": 1, "exchange": "XAMS", "name": "Aperam", "sector": "Materials", "symbol": "APAM.AS"}
+{"active": 1, "exchange": "XBRU", "name": "argenx", "sector": "Health Care", "symbol": "ARGX.BR"}
+{"active": 1, "exchange": "XAMS", "name": "ASML Holding", "sector": "Information Technology", "symbol": "ASML.AS"}
+{"active": 1, "exchange": "XSTO", "name": "Atlas Copco", "sector": "Industrials", "symbol": "ATCO-A.ST"}
+{"active": 1, "exchange": "XBRU", "name": "Azelis", "sector": "Industrials", "symbol": "AZE.BR"}
+{"active": 1, "exchange": "XLON", "name": "AstraZeneca", "sector": "Health Care", "symbol": "AZN.L"}
+{"active": 1, "exchange": "XLON", "name": "British American Tobacco", "sector": "Consumer Staples", "symbol": "BATS.L"}
+{"active": 1, "exchange": "XMAD", "name": "BBVA", "sector": "Financials", "symbol": "BBVA.MC"}
+{"active": 1, "exchange": "XPAR", "name": "BNP Paribas", "sector": "Financials", "symbol": "BNP.PA"}
+{"active": 1, "exchange": "XLON", "name": "BP", "sector": "Energy", "symbol": "BP.L"}
+{"active": 1, "exchange": "XSWX", "name": "Richemont", "sector": "Consumer Discretionary", "symbol": "CFR.SW"}
+{"active": 1, "exchange": "XBRU", "name": "Cofinimmo", "sector": "Real Estate", "symbol": "COFB.BR"}
+{"active": 1, "exchange": "XPAR", "name": "AXA", "sector": "Financials", "symbol": "CS.PA"}
+{"active": 1, "exchange": "XLON", "name": "Diageo", "sector": "Consumer Staples", "symbol": "DGE.L"}
+{"active": 1, "exchange": "XBRU", "name": "D'Ieteren Group", "sector": "Consumer Discretionary", "symbol": "DIE.BR"}
+{"active": 1, "exchange": "XCSE", "name": "DSV", "sector": "Industrials", "symbol": "DSV.CO"}
+{"active": 1, "exchange": "XETR", "name": "Deutsche Telekom", "sector": "Communication Services", "symbol": "DTE.DE"}
+{"active": 1, "exchange": "XPAR", "name": "EssilorLuxottica", "sector": "Health Care", "symbol": "EL.PA"}
+{"active": 1, "exchange": "XBRU", "name": "Elia Group", "sector": "Utilities", "symbol": "ELI.BR"}
+{"active": 1, "exchange": "XMIL", "name": "Enel", "sector": "Utilities", "symbol": "ENEL.MI"}
+{"active": 1, "exchange": "XBRU", "name": "Groupe Bruxelles Lambert", "sector": "Financials", "symbol": "GBLB.BR"}
+{"active": 1, "exchange": "XLON", "name": "GSK", "sector": "Health Care", "symbol": "GSK.L"}
+{"active": 1, "exchange": "XLON", "name": "HSBC", "sector": "Financials", "symbol": "HSBA.L"}
+{"active": 1, "exchange": "XMAD", "name": "Iberdrola", "sector": "Utilities", "symbol": "IBE.MC"}
+{"active": 1, "exchange": "XAMS", "name": "ING Group", "sector": "Financials", "symbol": "INGA.AS"}
+{"active": 1, "exchange": "XMIL", "name": "Intesa Sanpaolo", "sector": "Financials", "symbol": "ISP.MI"}
+{"active": 1, "exchange": "XMAD", "name": "Inditex", "sector": "Consumer Discretionary", "symbol": "ITX.MC"}
+{"active": 1, "exchange": "XBRU", "name": "KBC Group", "sector": "Financials", "symbol": "KBC.BR"}
+{"active": 1, "exchange": "XBRU", "name": "Lotus Bakeries", "sector": "Consumer Staples", "symbol": "LOTB.BR"}
+{"active": 1, "exchange": "XLON", "name": "London Stock Exchange Group", "sector": "Financials", "symbol": "LSEG.L"}
+{"active": 1, "exchange": "XPAR", "name": "LVMH", "sector": "Consumer Discretionary", "symbol": "MC.PA"}
+{"active": 1, "exchange": "XBRU", "name": "Melexis", "sector": "Information Technology", "symbol": "MELE.BR"}
+{"active": 1, "exchange": "XETR", "name": "Munich Re", "sector": "Financials", "symbol": "MUV2.DE"}
+{"active": 1, "exchange": "XHEL", "name": "Nordea", "sector": "Financials", "symbol": "NDA-FI.HE"}
+{"active": 1, "exchange": "XSWX", "name": "Nestle", "sector": "Consumer Staples", "symbol": "NESN.SW"}
+{"active": 1, "exchange": "XSWX", "name": "Novartis", "sector": "Health Care", "symbol": "NOVN.SW"}
+{"active": 1, "exchange": "XCSE", "name": "Novo Nordisk", "sector": "Health Care", "symbol": "NOVO-B.CO"}
+{"active": 1, "exchange": "XPAR", "name": "L'Oreal", "sector": "Consumer Staples", "symbol": "OR.PA"}
+{"active": 1, "exchange": "XBRU", "name": "Proximus", "sector": "Communication Services", "symbol": "PROX.BR"}
+{"active": 1, "exchange": "XAMS", "name": "Prosus", "sector": "Consumer Discretionary", "symbol": "PRX.AS"}
+{"active": 1, "exchange": "XMIL", "name": "Ferrari", "sector": "Consumer Discretionary", "symbol": "RACE.MI"}
+{"active": 1, "exchange": "XLON", "name": "RELX", "sector": "Industrials", "symbol": "REL.L"}
+{"active": 1, "exchange": "XETR", "name": "Rheinmetall", "sector": "Industrials", "symbol": "RHM.DE"}
+{"active": 1, "exchange": "XLON", "name": "Rio Tinto", "sector": "Materials", "symbol": "RIO.L"}
+{"active": 1, "exchange": "XPAR", "name": "Hermes", "sector": "Consumer Discretionary", "symbol": "RMS.PA"}
+{"active": 1, "exchange": "XSWX", "name": "Roche", "sector": "Health Care", "symbol": "ROG.SW"}
+{"active": 1, "exchange": "XPAR", "name": "Safran", "sector": "Industrials", "symbol": "SAF.PA"}
+{"active": 1, "exchange": "XMAD", "name": "Banco Santander", "sector": "Financials", "symbol": "SAN.MC"}
+{"active": 1, "exchange": "XPAR", "name": "Sanofi", "sector": "Health Care", "symbol": "SAN.PA"}
+{"active": 1, "exchange": "XETR", "name": "SAP", "sector": "Information Technology", "symbol": "SAP.DE"}
+{"active": 1, "exchange": "XLON", "name": "Shell", "sector": "Energy", "symbol": "SHEL.L"}
+{"active": 1, "exchange": "XETR", "name": "Siemens", "sector": "Industrials", "symbol": "SIE.DE"}
+{"active": 1, "exchange": "XBRU", "name": "Sofina", "sector": "Financials", "symbol": "SOF.BR"}
+{"active": 1, "exchange": "XPAR", "name": "Schneider Electric", "sector": "Industrials", "symbol": "SU.PA"}
+{"active": 1, "exchange": "XBRU", "name": "Syensqo", "sector": "Materials", "symbol": "SYENS.BR"}
+{"active": 1, "exchange": "XPAR", "name": "TotalEnergies", "sector": "Energy", "symbol": "TTE.PA"}
+{"active": 1, "exchange": "XSWX", "name": "UBS Group", "sector": "Financials", "symbol": "UBSG.SW"}
+{"active": 1, "exchange": "XBRU", "name": "UCB", "sector": "Health Care", "symbol": "UCB.BR"}
+{"active": 1, "exchange": "XMIL", "name": "UniCredit", "sector": "Financials", "symbol": "UCG.MI"}
+{"active": 1, "exchange": "XLON", "name": "Unilever", "sector": "Consumer Staples", "symbol": "ULVR.L"}
+{"active": 1, "exchange": "XBRU", "name": "Umicore", "sector": "Materials", "symbol": "UMI.BR"}
+{"active": 1, "exchange": "XSTO", "name": "Volvo", "sector": "Industrials", "symbol": "VOLV-B.ST"}
+{"active": 1, "exchange": "XBRU", "name": "Warehouses De Pauw", "sector": "Real Estate", "symbol": "WDP.BR"}
+{"active": 1, "exchange": "XSWX", "name": "Zurich Insurance", "sector": "Financials", "symbol": "ZURN.SW"}
