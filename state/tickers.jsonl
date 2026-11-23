@@ -120,7 +120,7 @@
 {"active": 1, "exchange": "XNYS", "name": "Centene Corporation", "sector": "Health Care", "symbol": "CNC"}
 {"active": 1, "exchange": "XNYS", "name": "CenterPoint Energy", "sector": "Utilities", "symbol": "CNP"}
 {"active": 1, "exchange": "XNYS", "name": "Capital One", "sector": "Financials", "symbol": "COF"}
-{"active": 1, "exchange": "XBRU", "name": "Cofinimmo", "sector": "Real Estate", "symbol": "COFB.BR"}
+{"active": 0, "exchange": "XBRU", "name": "Cofinimmo", "sector": "Real Estate", "symbol": "COFB.BR"}
 {"active": 1, "exchange": "XNYS", "name": "Coherent Corp.", "sector": "Information Technology", "symbol": "COHR"}
 {"active": 1, "exchange": "XNYS", "name": "Coinbase", "sector": "Financials", "symbol": "COIN"}
 {"active": 1, "exchange": "XNYS", "name": "Cooper Companies (The)", "sector": "Health Care", "symbol": "COO"}
@@ -443,7 +443,8 @@
 {"active": 1, "exchange": "XNYS", "name": "Ralph Lauren Corporation", "sector": "Consumer Discretionary", "symbol": "RL"}
 {"active": 1, "exchange": "XNYS", "name": "ResMed", "sector": "Health Care", "symbol": "RMD"}
 {"active": 1, "exchange": "XPAR", "name": "Hermes", "sector": "Consumer Discretionary", "symbol": "RMS.PA"}
-{"active": 1, "exchange": "XSWX", "name": "Roche", "sector": "Health Care", "symbol": "ROG.SW"}
+{"active": 1, "exchange": "XSWX", "name": "Roche", "sector": "Health Care", "symbol": "RO.SW"}
+{"active": 0, "exchange": "XSWX", "name": "Roche", "sector": "Health Care", "symbol": "ROG.SW"}
 {"active": 1, "exchange": "XNYS", "name": "Rockwell Automation", "sector": "Industrials", "symbol": "ROK"}
 {"active": 1, "exchange": "XNYS", "name": "Rollins, Inc.", "sector": "Industrials", "symbol": "ROL"}
 {"active": 1, "exchange": "XNYS", "name": "Roper Technologies", "sector": "Information Technology", "symbol": "ROP"}
