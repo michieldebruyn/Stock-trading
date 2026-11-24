@@ -16,7 +16,9 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 os.environ.setdefault("STOCKS_DB", str(ROOT / "data" / "demo.db"))
 
-from app import evaluate, predict, universe  # noqa: E402
+import json  # noqa: E402
+
+from app import evaluate, predict, reflect, research, universe  # noqa: E402
 from app.claude_predictor import BatchResult, Call, Usage  # noqa: E402
 from app.config import db_path  # noqa: E402
 from app.db import session  # noqa: E402
@@ -53,6 +55,43 @@ class FakePredictor:
         self.usage.output_tokens += 60 * len(wanted)
         return BatchResult(market_view="Demo data. Markets mixed; futures flat overnight, "
                                        "volatility subdued. No real forecast.", predictions=calls)
+
+
+DEMO_RULES = [
+    ("size-moves-to-atr", "Size expected_move_pct from atr14: demo rule, stocks moved more than expected.",
+     "Demo data: expected moves were far too small on most days."),
+    ("dont-lean-one-way", "Do not call nearly every stock UP: demo rule about lean.",
+     "Demo data: called UP far more often than stocks rose."),
+    ("earnings-news-first", "When news shows earnings or guidance, base the call on it: demo rule.",
+     "Demo data: the costliest misses had news we did not weigh."),
+]
+
+
+def demo_research(day, symbols, rng, tmp):
+    """Fake pre-market research for a few stocks so the news column and Learning page have content."""
+    pick = rng.sample(symbols, 12)
+    doc = {"market": {"summary": "Demo research: futures flat, no big overnight stories.",
+                      "events": ["Demo: US data at 14:30 UTC"], "sectors": {"Energy": "demo: oil steady"}},
+           "stocks": [{"symbol": s, "sentiment": rng.choice([-2, -1, 1, 2]),
+                       "note": "Demo news item.", "source": "demo"} for s in pick]}
+    f = tmp / "research.json"
+    f.write_text(json.dumps(doc))
+    research.import_research(f, day)
+
+
+def demo_reflection(day, i, tmp):
+    changes = []
+    if i < len(DEMO_RULES) * 4 and i % 4 == 1:
+        rid, text, ev = DEMO_RULES[i // 4]
+        changes.append({"action": "add", "id": rid, "text": text, "evidence": ev})
+    if i == 14:
+        changes.append({"action": "promote", "id": "size-moves-to-atr", "why": "Demo: held up over the last evenings."})
+    f = tmp / "reflection.json"
+    f.write_text(json.dumps({
+        "summary": f"Demo reflection for {day}: the market drove most of the result; stock selection was about average.",
+        "went_well": ["Demo: some confident calls were right."], "went_wrong": ["Demo: expected moves were too small."],
+        "research_focus": ["Demo: check earnings dates."], "rule_changes": changes}))
+    reflect.import_reflection(f, day)
 
 
 def main():
@@ -96,13 +135,19 @@ def main():
 
     insert_until(pred_start)
     fake = FakePredictor()
-    d = pred_start
+    import tempfile
+    tmp = Path(tempfile.mkdtemp(prefix="demo-loop-"))
+    symbols = [t["symbol"] for t in tickers]
+    d, i = pred_start, 0
     while d <= end:
         if d.weekday() < 5:
+            demo_research(d, symbols, rng, tmp)
             predict.run(today=d, fetch=False, force=True, predictor=fake)
             insert_until(d, d)
             with session() as conn:
                 evaluate.score(conn, d)
+            demo_reflection(d, i, tmp)
+            i += 1
         d += timedelta(days=1)
     with session() as conn:
         n = conn.execute("SELECT COUNT(*) FROM predictions").fetchone()[0]

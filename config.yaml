@@ -23,6 +23,13 @@ claude:
   max_parallel: 4       # concurrent API requests
   server_fallback: true # retry on a fallback model if a request is declined
 
+# Morning news research (see app/research.py). The research session always covers the stocks in
+# `always`, all of the BEL20, and the most unusual movers of the previous day, up to max_stocks.
+research:
+  max_stocks: 70
+  always: [AAPL, MSFT, NVDA, AMZN, GOOGL, META, TSLA, AVGO, JPM, XOM, LLY, V, WMT,
+           ASML.AS, SAP.DE, NOVO-B.CO, MC.PA, SHEL.L, AZN.L, NESN.SW, ROG.SW, SIE.DE, TTE.PA, HSBA.L]
+
 # Market context sent with every request (indices, futures, FX, volatility)
 context_symbols:
   "^GSPC": S&P 500

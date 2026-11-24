@@ -72,7 +72,10 @@ Input columns (all % unless noted): r1d/r5d/r20d/r60d = trailing returns; rsi14 
 macd_h = MACD histogram as % of price; sma20/sma50/sma200 = distance of price from those moving \
 averages; atr14 = average true range as % of price; vol_ratio = 5-day / 20-day average volume \
 (x); from_52w_hi = distance from the 52-week high; last5_daily_% = the last five daily returns, \
-oldest first; record = your last daily results on this stock, oldest first (+ right, - wrong).
+oldest first; record = your last daily results on this stock, oldest first (+ right, - wrong); \
+news = pre-market news research for this stock: a sentiment from -2 (clearly bad for today's \
+price) to +2 (clearly good), then the catalyst. A blank news cell means nothing was found, not \
+that nothing happened.
 
 How to reason:
 - Start from the market backdrop: overnight futures, Asian session, volatility, rates, FX. On \
@@ -82,6 +85,14 @@ should usually lean the same way unless there is a stock-specific reason.
 for them. US stocks also react to the European morning.
 - Then adjust per stock: momentum versus mean reversion, overbought/oversold readings, volume \
 spikes, sector moves.
+- News: a concrete catalyst announced since yesterday's close (earnings or guidance, M&A, an \
+upgrade or downgrade, regulation) can outweigh the technicals, especially on earnings day. News \
+that is days old is mostly priced in. Say in the rationale when news drove a call.
+- Your playbook and the measured facts about your own habits are in the context below. They come \
+from reviewing your real results: follow the rules, and fix the habits they show (lean, move \
+size, overconfidence).
+- Size expected_move_pct realistically: the context shows how far stocks actually move compared \
+with what you expected.
 - Short-horizon prediction is hard and close to a coin flip. Prefer modest confidence over \
 bold calls. Use your track record to correct systematic bias (for example, too many UP calls) \
 and overconfidence.

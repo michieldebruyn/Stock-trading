@@ -291,3 +291,28 @@ async function moveCharts(lineCanvas, scatterCanvas, horizon, days) {
     plugins: [wrongShade],
   });
 }
+
+// ---------- Learning page: hit rate against trivial baselines ----------
+
+async function learningChart(canvas) {
+  const rows = await (await fetch(apiUrl('/api/learning/daily'))).json();
+  if (!rows.length) { canvas.parentElement.innerHTML = '<div class="empty">No scored days yet.</div>'; return; }
+  const pct = (k) => rows.map(r => r[k] == null ? null : r[k] * 100);
+  const line = (label, key, color, dash) => ({ label, data: pct(key), borderColor: color, backgroundColor: color,
+    borderWidth: dash ? 1.5 : 2, borderDash: dash || [], pointRadius: rows.length > 40 ? 0 : 3, pointHoverRadius: 5,
+    tension: 0.2, spanGaps: true });
+  const opts = baseOptions();
+  opts.interaction = { mode: 'index', intersect: false };
+  opts.scales.y.min = 0; opts.scales.y.max = 100;
+  opts.scales.y.ticks = { callback: (v) => v + '%' };
+  opts.plugins.tooltip.callbacks = {
+    label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y == null ? '–' : ctx.parsed.y.toFixed(1) + '%'}`,
+    afterBody: (items) => `Playbook ${rows[items[0].dataIndex].version}`,
+  };
+  new Chart(canvas, { type: 'line', data: { labels: rows.map(r => r.date), datasets: [
+    line('Your hit rate', 'hit', css('--series-1')),
+    line('Always UP', 'always_up', css('--muted'), [5, 4]),
+    line('Everyone follows your lean', 'follow_majority', css('--series-2'), [2, 3]),
+    line('Stock selection (beats the market)', 'rel_hit', css('--series-3')),
+  ] }, options: opts });
+}

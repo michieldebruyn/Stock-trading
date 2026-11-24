@@ -18,7 +18,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
-from . import features, prices, stats, universe
+from . import features, prices, reflect, research, stats, universe
 from .claude_predictor import (OUTPUT_SCHEMA, SYSTEM_PROMPT, ClaudePredictor, parse_result,
                                user_message)
 from .config import get_config, local_tz
@@ -102,12 +102,15 @@ def market_context(conn: sqlite3.Connection, today: date) -> str:
 
 
 def build_run_context(conn: sqlite3.Connection, today: date, now_local: datetime) -> str:
+    news = research.market_text(research.news_for(conn, today)[0])
     return (
         f"Today is {today:%A %d %B %Y}; local time {now_local:%H:%M %Z}. "
         f"Markets have not opened yet for the stocks below.\n\n"
         f"Market backdrop (futures/Asia may already include today's session):\n"
         f"{market_context(conn, today)}\n\n"
-        f"Your track record:\n{stats.track_record_text(conn, today)}"
+        + (f"{news}\n(Per-stock news is in the `news` column of the tables.)\n\n" if news else "")
+        + f"Your track record:\n{stats.track_record_text(conn, today)}\n\n"
+        f"{reflect.learning_text(conn, today)}"
     )
 
 
@@ -130,9 +133,11 @@ def _prepare(today: date | None, fetch: bool, force: bool):
         log.info("Requesting %d predictions for %d tickers", n_pairs, len(jobs))
         run_context = build_run_context(conn, today, now_local) if jobs else ""
         records = stats.recent_record(conn, list(jobs)) if jobs else {}
+        news = research.news_for(conn, today)[1] if jobs else {}
+        version = reflect.playbook_version(conn)
     return SimpleNamespace(today=today, now_utc=now_utc, jobs=jobs, feats=feats, meta=meta,
                            skipped=skipped, n_pairs=n_pairs, run_context=run_context,
-                           records=records)
+                           records=records, news=news, playbook_version=version)
 
 
 def _batches(jobs: dict) -> list[list[str]]:
@@ -143,7 +148,7 @@ def _batches(jobs: dict) -> list[list[str]]:
 
 def _batch_rows(p, batch: list[str]) -> str:
     rows = features.to_rows({s: p.feats[s] for s in batch}, p.meta)
-    return _add_record_column(rows, p.records)
+    return _add_news_column(_add_record_column(rows, p.records), p.news)
 
 
 def _store(conn: sqlite3.Connection, run_id: int, today: date, jobs: dict, calls, model: str,
@@ -181,8 +186,10 @@ def run(today: date | None = None, fetch: bool = True, dry_run: bool = False,
             return {"requested": n_pairs, "stored": 0}
 
         run_id = conn.execute(
-            "INSERT INTO runs(run_type, run_date, started_at, status, model) VALUES ('predict',?,?,?,?)",
-            (today.isoformat(), now_utc.isoformat(), "running", ccfg["model"])).lastrowid
+            "INSERT INTO runs(run_type, run_date, started_at, status, model, playbook_version) "
+            "VALUES ('predict',?,?,?,?,?)",
+            (today.isoformat(), now_utc.isoformat(), "running", ccfg["model"],
+             p.playbook_version)).lastrowid
         conn.commit()
 
     predictor = predictor or ClaudePredictor(ccfg["model"], ccfg.get("effort", "medium"),
@@ -251,6 +258,7 @@ def export_batches(out_dir: Path, today: date | None = None, fetch: bool = True,
     plan_doc = {
         "today": p.today.isoformat(),
         "exported_at": p.now_utc.isoformat(),
+        "playbook_version": p.playbook_version,
         "batches": batches,
         "jobs": {s: [{k: str(v) if isinstance(v, date) else v for k, v in it.items()}
                      | {"exchange": p.meta[s]["exchange"]} for it in items]
@@ -271,7 +279,10 @@ def export_batches(out_dir: Path, today: date | None = None, fetch: bool = True,
         f"# Morning predictions\n\n{SYSTEM_PROMPT}\n\n"
         f"## Today's context\n\n{p.run_context}\n\n"
         f"## What to do\n\n"
-        f"There are {len(batches)} batch files, batch_01.md .. batch_{len(batches):02d}.md, "
+        + ("The `news` column and the market research above come from a research session that ran "
+           "earlier this morning: build on it, and spend any searching of your own on unusual stocks "
+           "whose news cell is blank.\n\n" if p.news else "")
+        + f"There are {len(batches)} batch files, batch_01.md .. batch_{len(batches):02d}.md, "
         f"{p.n_pairs} predictions in total. For EACH batch_NN.md, read the stock table and the "
         f"requested (symbol, horizon) pairs, reason about them as described above, and write "
         f"your answer to answer_NN.json in this folder (same NN). Each answer is one JSON "
@@ -340,8 +351,10 @@ def import_answers(in_dir: Path, model: str, force: bool = False, check: bool = 
     started = now_utc.isoformat()
     with session() as conn:
         run_id = conn.execute(
-            "INSERT INTO runs(run_type, run_date, started_at, status, model) VALUES ('predict',?,?,?,?)",
-            (today.isoformat(), doc.get("exported_at", started), "running", model)).lastrowid
+            "INSERT INTO runs(run_type, run_date, started_at, status, model, playbook_version) "
+            "VALUES ('predict',?,?,?,?,?)",
+            (today.isoformat(), doc.get("exported_at", started), "running", model,
+             doc.get("playbook_version"))).lastrowid
         stored = _store(conn, run_id, today, jobs, calls, model, started)
         if calls and not stored:
             conn.execute("DELETE FROM runs WHERE id=?", (run_id,))
@@ -357,6 +370,16 @@ def import_answers(in_dir: Path, model: str, force: bool = False, check: bool = 
                                    if late else [])) or None, run_id))
     log.info("Stored %d of %d predictions (status %s)", stored, n_pairs, status)
     return {"requested": n_pairs, "stored": stored, "status": status, "run_id": run_id}
+
+
+def _add_news_column(rows: str, news: dict[str, tuple[int, str]]) -> str:
+    """Append the pre-market research for each stock (blank when none was found)."""
+    lines = rows.split("\n")
+    out = [lines[0] + "|news"]
+    for line in lines[1:]:
+        hit = news.get(line.split("|", 1)[0])
+        out.append(line + "|" + (f"{hit[0]:+d}: {hit[1].replace('|', '/')}" if hit else ""))
+    return "\n".join(out)
 
 
 def _add_record_column(rows: str, records: dict[str, str]) -> str:

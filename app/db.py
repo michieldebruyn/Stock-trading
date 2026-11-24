@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS runs (
     output_tokens  INTEGER DEFAULT 0,
     n_items        INTEGER DEFAULT 0,
     market_view    TEXT,               -- Claude's overall market commentary
+    playbook_version TEXT,             -- which playbook the morning forecast followed
     error          TEXT
 );
 
@@ -85,6 +86,53 @@ CREATE TABLE IF NOT EXISTS intraday (
     PRIMARY KEY (symbol, date)
 );
 
+-- Self-improvement memory. Stored in the same state files as everything else, so every cloud run
+-- starts with it. Written only by app/reflect.py and app/research.py.
+
+-- Rules the morning forecaster follows. Added as 'trial' by the evening reflection, promoted to
+-- 'active' once they have survived a few days, 'retired' (never deleted) when they stop helping.
+CREATE TABLE IF NOT EXISTS playbook_rules (
+    id          TEXT PRIMARY KEY,      -- short slug, e.g. earnings-day-news-first
+    text        TEXT NOT NULL,
+    status      TEXT NOT NULL,         -- trial | active | retired
+    created_on  TEXT NOT NULL,
+    updated_on  TEXT NOT NULL,
+    evidence    TEXT,                  -- what in the results supports the rule
+    history     TEXT                   -- dated notes: why it was added, promoted, edited, retired
+);
+
+-- One row per evening: what happened, why, and what was changed.
+CREATE TABLE IF NOT EXISTS reflections (
+    date           TEXT PRIMARY KEY,
+    summary        TEXT NOT NULL,
+    went_well      TEXT,
+    went_wrong     TEXT,
+    changes        TEXT,               -- plain-language list of playbook changes made
+    research_focus TEXT,               -- what the next morning's news research should look for
+    stats          TEXT,               -- JSON snapshot of the diagnostics the reflection saw
+    playbook_version TEXT,             -- playbook after this reflection
+    created_at     TEXT NOT NULL
+);
+
+-- Pre-market news research, one row per researched stock per morning.
+CREATE TABLE IF NOT EXISTS research (
+    date      TEXT NOT NULL,
+    symbol    TEXT NOT NULL,
+    sentiment INTEGER NOT NULL,        -- -2 very negative .. +2 very positive for today's price
+    note      TEXT NOT NULL,           -- the catalyst, one short sentence
+    source    TEXT,
+    PRIMARY KEY (date, symbol)
+);
+
+-- The market-wide part of that research.
+CREATE TABLE IF NOT EXISTS research_market (
+    date       TEXT PRIMARY KEY,
+    summary    TEXT NOT NULL,
+    events     TEXT,                   -- scheduled events today (earnings, data releases, central banks)
+    sectors    TEXT,                   -- JSON {sector: "lean and reason"}
+    created_at TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_pred_target ON predictions(target_date);
 CREATE INDEX IF NOT EXISTS idx_pred_made   ON predictions(made_on, horizon);
 CREATE INDEX IF NOT EXISTS idx_prices_date ON prices(date);
@@ -99,6 +147,9 @@ def connect(path: Path | None = None) -> sqlite3.Connection:
     conn.execute("PRAGMA foreign_keys = ON")
     conn.execute("PRAGMA journal_mode = WAL")
     conn.executescript(SCHEMA)
+    # Databases created before the playbook existed lack this column.
+    if "playbook_version" not in {r[1] for r in conn.execute("PRAGMA table_info(runs)")}:
+        conn.execute("ALTER TABLE runs ADD COLUMN playbook_version TEXT")
     return conn
 
 
