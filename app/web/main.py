@@ -1,6 +1,7 @@
 """Local website: dashboard, predictions, per-ticker charts, accuracy."""
 from __future__ import annotations
 
+import json
 import logging
 import time
 from datetime import date, datetime, timedelta
@@ -11,7 +12,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from .. import stats
+from .. import reflect, research, stats
 from ..config import local_tz
 from ..db import connect
 
@@ -253,7 +254,37 @@ def accuracy_page(request: Request, days: int = 90):
     })
 
 
+@app.get("/learning", response_class=HTMLResponse)
+def learning_page(request: Request):
+    """The self-improvement loop: playbook, evening reflections, did the changes help."""
+    t = today()
+    with connect() as conn:
+        rules = [dict(r) for r in conn.execute(
+            "SELECT * FROM playbook_rules ORDER BY CASE status WHEN 'active' THEN 0 "
+            "WHEN 'trial' THEN 1 ELSE 2 END, created_on")]
+        reflections = [dict(r) for r in conn.execute("SELECT * FROM reflections ORDER BY date DESC LIMIT 30")]
+        versions = reflect.by_version(conn)
+        days = list(reversed(reflect.daily_metrics(conn, "daily", 45, t)))[:20]
+        version = reflect.playbook_version(conn)
+        market, stocks = None, {}
+        row = conn.execute("SELECT date FROM research_market ORDER BY date DESC LIMIT 1").fetchone()
+        if row:
+            market, stocks = research.news_for(conn, date.fromisoformat(row[0]))
+    return templates.TemplateResponse(request, "learning.html", {
+        "rules": rules, "reflections": reflections, "versions": list(reversed(versions)), "days": days,
+        "version": version, "market": market, "n_news": len(stocks),
+        "sectors": json.loads(market["sectors"] or "{}") if market else {},
+        "page": "learning",
+    })
+
+
 # ---------- JSON API used by the charts and the search box ----------
+
+@app.get("/api/learning/daily")
+def api_learning_daily():
+    """Daily hit rate against the trivial baselines, for the chart on the Learning page."""
+    with connect() as conn:
+        return reflect.daily_metrics(conn, "daily", 120, today())
 
 @app.get("/api/tickers")
 def api_tickers():

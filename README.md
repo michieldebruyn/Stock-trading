@@ -141,6 +141,50 @@ python scripts/state.py pull
 python -m app.serve --no-scheduler
 ```
 
+### The self-improving loop
+
+Two more cloud routines make the forecaster learn from its own results and read the news before it
+predicts. Everything they learn is kept in the same records on `claude/stock-data` (tables
+`playbook_rules`, `reflections`, `research`, `research_market`), so every run starts with it.
+
+```
+04:07 UTC  research   a Claude session searches the web (and the Stocklake connector, if it has it)
+                      for overnight news: market-wide, earnings, and ~70 stocks (the BEL20, big
+                      names, and yesterday's unusual movers). Stored per stock as sentiment -2..+2
+                      plus the catalyst and its source.
+05:30 UTC  predict    the morning forecast. Its brief now contains the market research, a `news`
+                      column per stock, the playbook, and measured facts about its own habits.
+21:45 UTC  evaluate   scores the calls (unchanged).
+21:53 UTC  reflect    a Claude session reviews the day, researches why the costliest misses moved,
+                      and updates the playbook.
+```
+
+**What the reflection works from** (`python -m app.reflect --export work/`): the day's hit rate
+next to trivial baselines (always UP, everyone follows the majority lean, yesterday's direction
+continues), *stock selection net of the market* (did UP calls beat the average stock?), the UP minus
+DOWN spread, lean, move size (expected vs actual), calibration, results by market and sector, the
+costliest misses with their rationale and news, rolling 5 and 20 day numbers, how calls that agreed
+with the news did against those that did not, and the performance of each playbook version. It can
+test a suspected pattern on the records with `python -m app.reflect --sql "SELECT ..."` (read-only).
+
+**The playbook** is a short list of process rules (at most 12). The code enforces the safeguards:
+a new rule needs written evidence and starts as `trial` (at most 3 new rules per evening); it can
+be promoted to `active` only after 3 evenings; an edited rule goes back to `trial`; rules are
+retired, never deleted, with the reason kept in their history. One day proves little, so the brief
+tells the reflection to separate the market's luck from skill and to write rules only for patterns
+that repeat.
+
+**Did a change help?** Each morning run records the playbook version it followed (a fingerprint
+of the live rules). The website's **Learning** page shows the playbook, every reflection, the hit
+rate against the baselines, and the results by playbook version. If a version does clearly worse
+than the one before, the next brief warns the forecaster and the reflection is told to consider
+retiring the rules it added.
+
+Without a Claude Code routine (the local `python -m app.serve` mode that calls the API), the
+forecast still follows the playbook, but nothing writes reflections or research for it: run the
+two sessions yourself (`python -m app.reflect --export work/` and
+`python -m app.research --export work/`) if you want the loop there.
+
 ### Publish the website on GitHub Pages
 
 `.github/workflows/pages.yml` publishes a static snapshot of the website to GitHub Pages: on every

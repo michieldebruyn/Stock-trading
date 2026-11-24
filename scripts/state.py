@@ -39,6 +39,11 @@ TABLES: dict[str, tuple[str, ...]] = {
     "evaluations": ("prediction_id",),
     "prices": ("symbol", "date"),
     "intraday": ("symbol", "date"),
+    # Self-improvement memory (playbook, evening reflections, morning news research)
+    "playbook_rules": ("id",),
+    "reflections": ("date",),
+    "research_market": ("date",),
+    "research": ("date", "symbol"),
 }
 
 
@@ -51,7 +56,8 @@ def git(*args: str, cwd: Path = ROOT, check: bool = True) -> subprocess.Complete
 
 # --- database <-> text ---------------------------------------------------------------------------
 
-APPEND_ONLY = ("runs", "predictions", "evaluations", "prices")
+APPEND_ONLY = ("runs", "predictions", "evaluations", "prices",
+               "playbook_rules", "reflections", "research_market", "research")
 
 # Large, ever-growing tables are split into parts (`_part` names the file) so no single file
 # approaches GitHub's 100 MB limit and untouched months produce no diff: predictions and scores
@@ -63,6 +69,7 @@ PARTITION_SQL = {
                     "JOIN predictions p ON p.id = e.prediction_id ORDER BY e.prediction_id"),
     "prices": "SELECT substr(date, 1, 7) AS _part, * FROM prices ORDER BY symbol, date",
     "intraday": "SELECT date AS _part, * FROM intraday ORDER BY symbol",
+    "research": "SELECT substr(date, 1, 7) AS _part, * FROM research ORDER BY date, symbol",
 }
 
 

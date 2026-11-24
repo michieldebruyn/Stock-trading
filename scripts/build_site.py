@@ -68,6 +68,8 @@ def build(out: Path, root: str = "") -> dict:
         page("/predictions", horizon=horizon)
         for d in ds:
             page("/predictions", horizon=horizon, made_on=d)
+    page("/learning")
+    data("/api/learning/daily")
     page("/accuracy")
     for days in main.ACCURACY_DAYS:
         page("/accuracy", days=days)
