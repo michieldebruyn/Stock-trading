@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import result, change, dir %}
+{% from "_macros.html" import result, change, dir, moveacc %}
 {% block title %}Predictions · Stock Predictions{% endblock %}
 {% block content %}
 <h1>Predictions</h1>
@@ -7,6 +7,7 @@
   {{ summary.n }} {{ horizon }} calls{% if made_on %} made on {{ made_on }}{% endif %}:
   ▲ {{ summary.up }} up, ▼ {{ summary.n - summary.up }} down.
   {% if summary.scored %}<strong>{{ summary.hits }} of {{ summary.scored }} right ({{ (summary.hits / summary.scored)|pct }})</strong>.{% else %}Not scored yet.{% endif %}
+  {% if summary.move_n %}Size of the move: <strong>{{ summary.move_acc|pct }} move accuracy</strong>, off by {{ '%.2f'|format(summary.move_miss) }} pp on average.{% endif %}
 </p>
 
 {% if static_site %}
@@ -54,22 +55,24 @@
 <div class="card table-wrap">
 <table id="preds">
   <thead><tr>
-    <th>Ticker</th><th>Name</th><th>Call</th><th class="num">Conf.</th><th class="num">Expected</th>
-    <th class="num">Base close</th><th class="num">Close / live</th><th class="num">Change</th><th>Result</th>
+    <th>Ticker</th><th>Name</th><th>Call</th><th class="num" aria-sort="none"><button type="button" class="sort" data-key="conf">Conf.<span class="arrow" aria-hidden="true"></span></button></th><th class="num" aria-sort="none" title="Predicted % move. Click to sort high to low, again for low to high"><button type="button" class="sort" data-key="exp">Expected<span class="arrow" aria-hidden="true"></span></button></th>
+    <th class="num">Base close</th><th class="num">Close / live</th><th class="num" aria-sort="none"><button type="button" class="sort" data-key="chg">Change<span class="arrow" aria-hidden="true"></span></button></th><th class="num" aria-sort="none" title="How close the expected % move was to the actual % move. Expected +7%, actual +10% = 70%. Wrong direction = 0%."><button type="button" class="sort" data-key="macc">Move acc.<span class="arrow" aria-hidden="true"></span></button></th><th>Result</th>
     {% if horizon == 'weekly' %}<th>Target day</th>{% endif %}<th>Why</th>
   </tr></thead>
   <tbody>
   {% for r in rows %}
-    <tr data-symbol="{{ r.symbol }}" data-base="{{ r.base_close }}" data-dir="{{ r.direction }}" data-final="{{ 1 if r.correct is not none else 0 }}"
+    <tr data-i="{{ loop.index0 }}" data-symbol="{{ r.symbol }}" data-base="{{ r.base_close }}" data-dir="{{ r.direction }}" data-final="{{ 1 if r.correct is not none else 0 }}"
         data-unis="{{ r.unis or '' }}" data-res="{{ 'pending' if r.correct is none else ('correct' if r.correct else 'wrong') }}">
       <td><a href="{{ url('/ticker/' ~ r.symbol) }}">{{ r.symbol }}</a></td>
       <td>{{ r.name }}</td>
       <td>{{ dir(r.direction) }}</td>
-      <td class="num">{{ '%.0f'|format(r.confidence * 100) }}%</td>
-      <td class="num">{{ change(r.expected_move_pct) }}</td>
+      <td class="num" data-v="{{ r.confidence }}">{{ '%.0f'|format(r.confidence * 100) }}%</td>
+      <td class="num" data-v="{{ r.expected_move_pct if r.expected_move_pct is not none else '' }}">{{ change(r.expected_move_pct) }}</td>
       <td class="num">{{ '%.2f'|format(r.base_close) }}</td>
       <td class="num live">{% if r.actual_close %}{{ '%.2f'|format(r.actual_close) }}{% elif r.tracking_pct is not none %}{{ '%.2f'|format(r.latest_close) }}{% else %}<span class="muted">–</span>{% endif %}</td>
-      <td class="num chg">{{ change(r.actual_change_pct if r.actual_change_pct is not none else r.tracking_pct) }}</td>
+      {% set chg = r.actual_change_pct if r.actual_change_pct is not none else r.tracking_pct %}
+      <td class="num chg" data-v="{{ chg if chg is not none else '' }}">{{ change(r.actual_change_pct if r.actual_change_pct is not none else r.tracking_pct) }}</td>
+      <td class="num" data-v="{{ r.move_acc if r.move_acc is not none else '' }}">{{ moveacc(r) }}</td>
       <td class="res">{{ result(r) }}</td>
       {% if horizon == 'weekly' %}<td>{{ r.target_date }}</td>{% endif %}
       <td class="why">{{ r.rationale }}</td>
@@ -94,6 +97,33 @@ function filterRows() {
     tr.style.display = ok ? '' : 'none';
   });
 }
+// Sortable columns: each click goes high to low, low to high, then back to the original order.
+// Empty values (not scored yet) always go last.
+const SORT_COL = { conf: 3, exp: 4, chg: 7, macc: 8 };
+let sortState = { key: null, dir: 0 };   // dir: -1 high->low, 1 low->high, 0 original
+function sortRows(key) {
+  const dir = sortState.key !== key ? -1 : (sortState.dir === -1 ? 1 : 0);
+  sortState = { key, dir };
+  const body = document.querySelector('#preds tbody');
+  const rows = [...body.rows];
+  const val = (tr) => {
+    const v = tr.cells[SORT_COL[key]].dataset.v;
+    return v === '' || v === undefined ? null : parseFloat(v);
+  };
+  rows.sort((a, b) => {
+    if (!dir) return a.dataset.i - b.dataset.i;
+    const x = val(a), y = val(b);
+    if (x === null || y === null) return (x === null) - (y === null) || a.dataset.i - b.dataset.i;
+    return (x - y) * dir || a.dataset.i - b.dataset.i;
+  });
+  body.append(...rows);
+  document.querySelectorAll('#preds th[aria-sort]').forEach(th => {
+    const on = th.querySelector('.sort').dataset.key === key && dir;
+    th.setAttribute('aria-sort', on ? (dir < 0 ? 'descending' : 'ascending') : 'none');
+    th.querySelector('.arrow').textContent = on ? (dir < 0 ? ' ↓' : ' ↑') : '';
+  });
+}
+document.querySelectorAll('#preds .sort').forEach(b => b.addEventListener('click', () => sortRows(b.dataset.key)));
 // Static site: links like ".../predictions/#universe=bel20" preselect the market filter.
 if (window.SITE && window.SITE.static && location.hash) {
   const h = new URLSearchParams(location.hash.slice(1));
@@ -116,6 +146,7 @@ async function loadLive(btn) {
       const chg = (d.price / parseFloat(r.dataset.base) - 1) * 100;
       const on = (chg > 0) === (r.dataset.dir === 'UP');
       r.querySelector('.live').textContent = d.price.toFixed(2);
+      r.querySelector('.chg').dataset.v = chg;
       r.querySelector('.chg').innerHTML = `<span class="${chg > 0 ? 'pos' : 'neg'}">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</span>`;
       r.querySelector('.res').innerHTML = `<span class="pill ${on ? 'ok' : 'bad'}" title="Live, not final">live ${on ? '✓' : '✗'}</span>`;
     });

@@ -335,3 +335,39 @@ def test_website_renders(db):
                 "/api/ticker/AAPL/chart?range=1w"]:
         assert client.get(url).status_code == 200, url
     assert client.get("/ticker/NOPE").status_code == 404
+
+
+def test_move_accuracy_formula():
+    from app.stats import move_accuracy
+    assert move_accuracy(7, 10) == pytest.approx(0.70)     # predicted +7%, went +10%
+    assert move_accuracy(10, 7) == pytest.approx(0.70)     # symmetric
+    assert move_accuracy(-2, -2) == pytest.approx(1.0)
+    assert move_accuracy(2, -1) == 0.0                     # wrong direction
+    assert move_accuracy(None, 3) is None
+
+
+def test_move_accuracy_in_stats_and_pages(db):
+    from fastapi.testclient import TestClient
+    from app import stats
+    from app.web.main import app
+    calls = [("AAPL", 7.0, 10.0, 1), ("KBC.BR", -1.0, 2.0, 0)]
+    for i, (sym, exp, act, ok) in enumerate(calls, start=1):
+        db.execute("""INSERT INTO predictions(id, symbol, horizon, made_on, period_start, target_date,
+                        base_date, base_close, direction, confidence, expected_move_pct, model, created_at)
+                      VALUES (?,?,'daily','2026-11-23','2026-11-23','2026-11-23','2026-11-20',100,?,0.6,?,'m','x')""",
+                   (i, sym, "UP" if exp > 0 else "DOWN", exp))
+        db.execute("""INSERT INTO evaluations VALUES (?, ?, ?, ?, ?, 'x')""",
+                   (i, 100 + act, act, "UP" if act > 0 else "DOWN", ok))
+    db.commit()
+    a = stats.accuracy(db, "daily")
+    assert a["move_n"] == 2
+    assert a["move_acc"] == pytest.approx((0.70 + 0.0) / 2)
+    assert a["move_miss"] == pytest.approx((3 + 3) / 2)
+    assert len(stats.moves(db, "daily", date(2026, 1, 1))) == 2
+
+    client = TestClient(app)
+    page = client.get("/predictions?made_on=2026-11-23").text
+    assert "Move acc." in page and "35.0% move accuracy" in page
+    assert 'data-key="exp"' in page and 'data-v="7.0"' in page   # sortable Expected column
+    assert "Size of the move" in client.get("/accuracy?days=3650").text
+    assert client.get("/api/accuracy/moves?days=3650").json()["points"]

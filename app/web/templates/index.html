@@ -24,12 +24,12 @@
   <div class="card stat">
     <div class="label">Daily accuracy · last 30 days</div>
     <div class="value">{{ overall.daily30.rate|pct }}</div>
-    <div class="foot">{{ overall.daily30.hits }} of {{ overall.daily30.n }} calls right · 50% is a coin flip</div>
+    <div class="foot">{{ overall.daily30.hits }} of {{ overall.daily30.n }} calls right · 50% is a coin flip{% if overall.daily30.move_n %} · move accuracy {{ overall.daily30.move_acc|pct }}{% endif %}</div>
   </div>
   <div class="card stat">
     <div class="label">Weekly accuracy · last 90 days</div>
     <div class="value">{{ overall.weekly90.rate|pct }}</div>
-    <div class="foot">{{ overall.weekly90.hits }} of {{ overall.weekly90.n }} calls right</div>
+    <div class="foot">{{ overall.weekly90.hits }} of {{ overall.weekly90.n }} calls right{% if overall.weekly90.move_n %} · move accuracy {{ overall.weekly90.move_acc|pct }}{% endif %}</div>
   </div>
   <div class="card stat">
     <div class="label">Daily accuracy · all time</div>
@@ -58,6 +58,7 @@
         <span>{% if b.scored %}{{ b.hits }}/{{ b.scored }} right{% else %}not scored yet{% endif %}</span></div>
     {% endif %}
     <div class="kv"><span>Daily, 30 days</span><span>{{ c.daily30.rate|pct }} <span class="muted">(n={{ c.daily30.n }})</span></span></div>
+    <div class="kv"><span>Move accuracy, daily 30 days</span><span>{{ c.daily30.move_acc|pct }}</span></div>
     <div class="kv"><span>Weekly, 90 days</span><span>{{ c.weekly90.rate|pct }} <span class="muted">(n={{ c.weekly90.n }})</span></span></div>
     <div class="kv"><span></span><a href="{{ url('/predictions', universe=c.key) }}">View calls →</a></div>
   </div>

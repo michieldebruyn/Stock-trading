@@ -178,7 +178,7 @@ never touched.
 | **Dashboard** | Overall daily/weekly accuracy, per-market cards (up/down split of today's calls, hit rates), Claude's market view, today's highest-confidence calls |
 | **Predictions** | Every call for a date, filterable by market and result, with a **Load live prices** button that shows whether each open call is on track right now |
 | **Ticker** (search box) | Price chart with **1D / 1W / 1M** buttons (15-minute prices for 1D and 1W, daily closes for 1M, all saved by the morning and evening jobs), 6-month price chart with every call marked ▲/▼ in green (right) or red (wrong), today's live intraday price against the base close, full daily and weekly history with rationales |
-| **Accuracy** | Hit rate by market and horizon, rolling hit rate vs the 50% coin flip, calibration chart (does "70% confident" mean right 70% of the time?), most/least predictable stocks |
+| **Accuracy** | Hit rate by market and horizon, rolling hit rate vs the 50% coin flip, calibration chart (does "70% confident" mean right 70% of the time?), **move accuracy** (how close the predicted % move was to the actual one: predicted +7%, actual +10% scores 70%, wrong direction scores 0%) with a predicted-vs-actual scatter, most/least predictable stocks |
 
 ## Configuration (`config.yaml`)
 

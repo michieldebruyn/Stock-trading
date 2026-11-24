@@ -73,6 +73,7 @@ def build(out: Path, root: str = "") -> dict:
         page("/accuracy", days=days)
         for horizon in ("daily", "weekly"):
             data("/api/accuracy/series", horizon=horizon, days=days)
+            data("/api/accuracy/moves", horizon=horizon, days=days)
     data("/api/tickers")
     for sym in symbols:
         page(f"/ticker/{sym}")

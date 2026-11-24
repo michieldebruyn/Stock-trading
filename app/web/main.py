@@ -119,6 +119,9 @@ def _prediction_rows(conn, horizon: str, made_on: str | None, universe: str | No
     for r in conn.execute(sql, params):
         d = dict(r)
         d["tracking_pct"] = None
+        d["move_acc"] = stats.move_accuracy(d["expected_move_pct"], d["actual_change_pct"])
+        d["move_error"] = (None if d["move_acc"] is None
+                           else d["actual_change_pct"] - d["expected_move_pct"])
         if d["correct"] is None and d["latest_close"] and d["latest_date"] and d["latest_date"] > d["base_date"]:
             # Not scored yet, but newer prices exist: show how the call is tracking.
             d["tracking_pct"] = (d["latest_close"] / d["base_close"] - 1) * 100
@@ -168,6 +171,15 @@ def dashboard(request: Request):
     })
 
 
+def _move_summary(rows) -> dict:
+    """Average move accuracy and miss over the scored rows that have an expected move."""
+    m = [r for r in rows if r["move_acc"] is not None]
+    if not m:
+        return {"move_n": 0, "move_acc": None, "move_miss": None}
+    return {"move_n": len(m), "move_acc": sum(r["move_acc"] for r in m) / len(m),
+            "move_miss": sum(abs(r["move_error"]) for r in m) / len(m)}
+
+
 @app.get("/predictions", response_class=HTMLResponse)
 def predictions_page(request: Request, horizon: str = "daily", universe: str = "",
                      made_on: str = "", result: str = ""):
@@ -189,6 +201,7 @@ def predictions_page(request: Request, horizon: str = "daily", universe: str = "
     summary = {
         "n": len(rows), "up": sum(r["direction"] == "UP" for r in rows),
         "scored": len(scored), "hits": sum(r["correct"] for r in scored),
+        **_move_summary(rows),
     }
     return templates.TemplateResponse(request, "predictions.html", {
         "rows": rows, "dates": dates, "horizon": horizon, "universe": universe,
@@ -211,7 +224,8 @@ def ticker_page(request: Request, symbol: str):
                             (symbol,)).fetchall()
     def acc(rows):
         s = [r for r in rows if r["correct"] is not None]
-        return {"n": len(s), "rate": (sum(r["correct"] for r in s) / len(s)) if s else None}
+        return {"n": len(s), "rate": (sum(r["correct"] for r in s) / len(s)) if s else None,
+                **_move_summary(rows)}
     return templates.TemplateResponse(request, "ticker.html", {
         "t": t, "unis": [UNIVERSES.get(u, u) for u in unis], "daily": daily, "weekly": weekly,
         "acc_daily": acc(daily), "acc_weekly": acc(weekly),
@@ -359,3 +373,10 @@ def api_accuracy_series(horizon: str = "daily", days: int = 90):
         series["all"] = stats.daily_series(conn, horizon, None, since)
         calib = stats.calibration(conn, horizon, since)
     return {"series": series, "calibration": calib, "labels": UNIVERSES}
+
+
+@app.get("/api/accuracy/moves")
+def api_accuracy_moves(horizon: str = "daily", days: int = 90):
+    """Predicted vs actual % move for each scored call (scatter chart on the accuracy page)."""
+    with connect() as conn:
+        return {"points": stats.moves(conn, horizon, today() - timedelta(days=days))}
