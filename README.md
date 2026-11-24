@@ -143,9 +143,12 @@ python -m app.serve --no-scheduler
 
 ### Publish the website on GitHub Pages
 
-`.github/workflows/pages.yml` publishes a static snapshot of the website to GitHub Pages: after
-the morning predictions (08:15 UTC), after the evening scoring (22:15 UTC), on every push to
-`main`, and on demand from the Actions tab. It loads the latest records from `claude/stock-data`
+`.github/workflows/pages.yml` publishes a static snapshot of the website to GitHub Pages: on every
+push to `main`, on demand from the Actions tab, and by a check every 30 minutes on weekdays that
+rebuilds only when `claude/stock-data` has new records (the site publishes the version it was built
+from as `data-version.txt`; a skipped check takes a few seconds). So the site follows the morning
+and evening jobs within about half an hour, however late GitHub starts a scheduled run. When
+starting it by hand, tick "only_if_changed" to get the same skip behavior. It loads the latest records from `claude/stock-data`
 and renders every page with `scripts/build_site.py`. Everything works from the stored data,
 including the 1D / 1W / 1M charts, the search box and the predictions filters; the live Yahoo
 Finance features (the **Load live prices** button and the **Today, live** chart) exist only on

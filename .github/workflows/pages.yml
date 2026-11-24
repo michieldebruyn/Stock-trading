@@ -4,15 +4,25 @@
 # evening cloud routines), renders every page with scripts/build_site.py and deploys the result.
 # One-time setup on GitHub: Settings > Pages > Source: "GitHub Actions". Scheduled runs only
 # happen when this file is on the repository's default branch.
+#
+# When it runs: on every push to main, on demand, and every 30 minutes on weekdays. The
+# scheduled runs first compare the newest commit on claude/stock-data with the one the live site
+# was built from (the site publishes it as data-version.txt) and only rebuild when they differ,
+# so the site follows the morning and evening jobs within about half an hour, however late
+# GitHub starts a scheduled run, and costs nothing in between.
 name: Publish website
 
 on:
   push:
     branches: [main]
   schedule:
-    - cron: "15 8 * * 1-5"    # after the morning predictions (routine starts 05:30 UTC)
-    - cron: "15 22 * * 1-5"   # after the evening scoring (routine starts 21:45 UTC)
+    - cron: "7,37 5-23 * * 1-5"   # minutes off the hour: GitHub delays or drops runs at :00 and :30
   workflow_dispatch:
+    inputs:
+      only_if_changed:
+        description: "Rebuild only if claude/stock-data has new records (default: always rebuild)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -21,10 +31,47 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false   # a 30-minute check must never cancel a deploy that is running
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      build: ${{ steps.decide.outputs.build }}
+    steps:
+      - name: Decide whether the live site is out of date
+        id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+          ONLY_IF_CHANGED: ${{ inputs.only_if_changed }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$EVENT" != "schedule" ] && [ "$ONLY_IF_CHANGED" != "true" ]; then
+            echo "Triggered by $EVENT: rebuilding."
+            echo "build=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          current=$(gh api "repos/$REPO/git/ref/heads/claude/stock-data" --jq .object.sha || true)
+          if [ -z "$current" ]; then
+            echo "Could not read claude/stock-data: rebuilding to be safe."
+            echo "build=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          site=$(gh api "repos/$REPO/pages" --jq .html_url 2>/dev/null || true)
+          site=${site:-https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO#*/}/}
+          deployed=$(curl -fsS --max-time 20 "${site%/}/data-version.txt?t=$(date +%s)" 2>/dev/null | tr -d '[:space:]' || true)
+          echo "records on claude/stock-data: $current"
+          echo "records on the live site:     ${deployed:-unknown}"
+          if [ "$current" = "$deployed" ]; then
+            echo "Site is up to date: nothing to do."
+            echo "build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "New records: rebuilding."
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: check
+    if: needs.check.outputs.build == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,6 +84,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # Read before the pull: if the branch moves in between, the site just rebuilds once more.
+      - name: Note which records this build uses
+        id: data
+        run: echo "sha=$(git ls-remote origin refs/heads/claude/stock-data | cut -f1)" >> "$GITHUB_OUTPUT"
+
       - name: Load the latest records from claude/stock-data
         run: python scripts/state.py pull
 
@@ -46,6 +98,9 @@ jobs:
 
       - name: Build the static site
         run: python scripts/build_site.py --out _site --root "${{ steps.pages.outputs.base_path }}"
+
+      - name: Publish the record version next to the site
+        run: echo "${{ steps.data.outputs.sha }}" > _site/data-version.txt
 
       - uses: actions/upload-pages-artifact@v3
         with:
