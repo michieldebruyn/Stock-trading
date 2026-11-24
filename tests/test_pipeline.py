@@ -368,5 +368,6 @@ def test_move_accuracy_in_stats_and_pages(db):
     client = TestClient(app)
     page = client.get("/predictions?made_on=2026-11-23").text
     assert "Move acc." in page and "35.0% move accuracy" in page
+    assert 'data-key="exp"' in page and 'data-v="7.0"' in page   # sortable Expected column
     assert "Size of the move" in client.get("/accuracy?days=3650").text
     assert client.get("/api/accuracy/moves?days=3650").json()["points"]
