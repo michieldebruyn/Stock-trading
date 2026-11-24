@@ -36,6 +36,29 @@
   </table>
 </div>
 
+<div class="card table-wrap section">
+  <h2>Size of the move</h2>
+  <p class="sub" style="margin-bottom:8px">Move accuracy compares the predicted % move with the actual % move:
+    1 − |actual − expected| ÷ the larger of the two. Expected +7% and actual +10% scores 70%; a wrong direction scores 0%.</p>
+  <table>
+    <thead><tr><th>Horizon</th><th class="num">All markets</th>
+      {% for k, v in universes.items() %}<th class="num">{{ v }}</th>{% endfor %}
+      <th class="num">Avg miss</th><th class="num">Avg predicted move</th><th class="num">Avg actual move</th></tr></thead>
+    <tbody>
+    {% for row in table %}
+      <tr>
+        <td>{{ row.horizon|capitalize }}</td>
+        <td class="num"><strong>{{ row.all.move_acc|pct }}</strong> <span class="muted">n={{ row.all.move_n }}</span></td>
+        {% for k in universes %}<td class="num">{{ row[k].move_acc|pct }} <span class="muted">n={{ row[k].move_n }}</span></td>{% endfor %}
+        <td class="num">{{ '%.2f pp'|format(row.all.move_miss) if row.all.move_miss is not none else '–' }}</td>
+        <td class="num">{{ '%.2f%%'|format(row.all.exp_size) if row.all.exp_size is not none else '–' }}</td>
+        <td class="num">{{ '%.2f%%'|format(row.all.act_size) if row.all.act_size is not none else '–' }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% for horizon in ['daily', 'weekly'] %}
 <div class="grid k2 section">
   <div class="card">
@@ -56,16 +79,36 @@
 </div>
 {% endfor %}
 
-{% if best %}
+{% for horizon in ['daily', 'weekly'] %}
 <div class="grid k2 section">
   <div class="card">
+    <h2>{{ horizon|capitalize }} move accuracy, rolling {{ '10 days' if horizon == 'daily' else '4 weeks' }}</h2>
+    <div class="legend">
+      <span><i style="background:var(--series-1)"></i>S&amp;P 500</span>
+      <span><i style="background:var(--series-2)"></i>Europe large caps</span>
+      <span><i style="background:var(--series-3)"></i>BEL20</span>
+    </div>
+    <div class="chart-box"><canvas id="moveline-{{ horizon }}"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>{{ horizon|capitalize }} predicted vs actual move</h2>
+    <div class="legend"><span>Each dot is one call. Dots on the dashed line got the size exactly right; dots in the
+      shaded corners got the direction wrong.</span></div>
+    <div class="chart-box"><canvas id="moves-{{ horizon }}"></canvas></div>
+  </div>
+</div>
+{% endfor %}
+
+{% if best %}
+<div class="grid k2 section">
+  <div class="card table-wrap">
     <h2>Most predictable stocks (daily, at least 5 calls)</h2>
     <table><thead><tr><th>Ticker</th><th>Name</th><th class="num">Right</th><th class="num">Calls</th></tr></thead>
       <tbody>{% for r in best %}<tr><td><a href="{{ url('/ticker/' ~ r.symbol) }}">{{ r.symbol }}</a></td><td>{{ r.name }}</td>
         <td class="num">{{ r.rate|pct }}</td><td class="num">{{ r.n }}</td></tr>{% endfor %}</tbody></table>
   </div>
   {% if worst %}
-  <div class="card">
+  <div class="card table-wrap">
     <h2>Least predictable stocks</h2>
     <table><thead><tr><th>Ticker</th><th>Name</th><th class="num">Right</th><th class="num">Calls</th></tr></thead>
       <tbody>{% for r in worst %}<tr><td><a href="{{ url('/ticker/' ~ r.symbol) }}">{{ r.symbol }}</a></td><td>{{ r.name }}</td>
@@ -78,6 +121,7 @@
 <script>
   for (const h of ['daily', 'weekly']) {
     accuracyCharts(document.getElementById('line-' + h), document.getElementById('calib-' + h), h, {{ days }});
+    moveCharts(document.getElementById('moveline-' + h), document.getElementById('moves-' + h), h, {{ days }});
   }
 </script>
 {% endblock %}

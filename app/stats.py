@@ -9,12 +9,32 @@ SCORED = """
     JOIN evaluations e ON e.prediction_id = p.id
 """
 
+# Move accuracy: how close the predicted % move was to the actual % move, from 0 to 1.
+#   1 - |actual - expected| / max(|actual|, |expected|), floored at 0.
+# Expected +7%, actual +10%  -> 1 - 3/10 = 0.70.  Wrong direction -> 0.
+# NULL when the prediction has no expected move.
+MOVE_ACC_SQL = """CASE WHEN p.expected_move_pct IS NULL THEN NULL ELSE
+    MAX(0.0, 1.0 - ABS(e.actual_change_pct - p.expected_move_pct)
+        / MAX(ABS(e.actual_change_pct), ABS(p.expected_move_pct), 1e-9)) END"""
+
+
+def move_accuracy(expected: float | None, actual: float | None) -> float | None:
+    """Python twin of MOVE_ACC_SQL, for single rows."""
+    if expected is None or actual is None:
+        return None
+    scale = max(abs(actual), abs(expected), 1e-9)
+    return max(0.0, 1.0 - abs(actual - expected) / scale)
+
 
 def accuracy(conn: sqlite3.Connection, horizon: str, since: date | None = None,
              universe: str | None = None) -> dict:
     sql = f"SELECT COUNT(*) n, SUM(e.correct) hits, AVG(p.confidence) conf, " \
           f"AVG(CASE WHEN p.direction='UP' THEN 1.0 ELSE 0 END) up_share, " \
-          f"AVG(CASE WHEN e.actual_direction='UP' THEN 1.0 ELSE 0 END) actual_up " \
+          f"AVG(CASE WHEN e.actual_direction='UP' THEN 1.0 ELSE 0 END) actual_up, " \
+          f"COUNT(p.expected_move_pct) move_n, AVG({MOVE_ACC_SQL}) move_acc, " \
+          f"AVG(ABS(e.actual_change_pct - p.expected_move_pct)) move_miss, " \
+          f"AVG(ABS(p.expected_move_pct)) exp_size, " \
+          f"AVG(CASE WHEN p.expected_move_pct IS NOT NULL THEN ABS(e.actual_change_pct) END) act_size " \
           f"{SCORED} WHERE p.horizon = ?"
     params: list = [horizon]
     if since:
@@ -32,6 +52,12 @@ def accuracy(conn: sqlite3.Connection, horizon: str, since: date | None = None,
         "avg_conf": r["conf"],
         "up_share": r["up_share"],
         "actual_up": r["actual_up"],
+        # Size of the move, not just its direction
+        "move_n": r["move_n"] or 0,
+        "move_acc": r["move_acc"],          # average move accuracy, 0..1
+        "move_miss": r["move_miss"],        # average |actual - expected| in percentage points
+        "exp_size": r["exp_size"],          # average predicted move size, %
+        "act_size": r["act_size"],          # average actual move size, %
     }
 
 
@@ -47,7 +73,8 @@ def calibration(conn: sqlite3.Connection, horizon: str, since: date | None = Non
 def daily_series(conn: sqlite3.Connection, horizon: str, universe: str | None = None,
                  since: date | None = None) -> list[dict]:
     """Hit rate per target date (optionally per universe)."""
-    sql = f"SELECT p.target_date d, COUNT(*) n, AVG(e.correct) rate {SCORED} WHERE p.horizon = ?"
+    sql = f"SELECT p.target_date d, COUNT(*) n, AVG(e.correct) rate, AVG({MOVE_ACC_SQL}) move_acc, " \
+          f"COUNT(p.expected_move_pct) move_n {SCORED} WHERE p.horizon = ?"
     params: list = [horizon]
     if universe:
         sql += " AND p.symbol IN (SELECT symbol FROM ticker_universes WHERE universe = ?)"
@@ -57,6 +84,14 @@ def daily_series(conn: sqlite3.Connection, horizon: str, universe: str | None = 
         params.append(since.isoformat())
     sql += " GROUP BY p.target_date ORDER BY p.target_date"
     return [dict(r) for r in conn.execute(sql, params)]
+
+
+def moves(conn: sqlite3.Connection, horizon: str, since: date, limit: int = 3000) -> list[dict]:
+    """Predicted vs actual % move per scored call (most recent first), for the scatter chart."""
+    sql = f"""SELECT p.symbol, p.target_date d, p.expected_move_pct exp, e.actual_change_pct act
+              {SCORED} WHERE p.horizon = ? AND p.target_date >= ? AND p.expected_move_pct IS NOT NULL
+              ORDER BY p.target_date DESC LIMIT ?"""
+    return [dict(r) for r in conn.execute(sql, (horizon, since.isoformat(), limit))]
 
 
 def ticker_ranking(conn: sqlite3.Connection, horizon: str, since: date, min_n: int = 5) -> list[dict]:

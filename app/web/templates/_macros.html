@@ -14,4 +14,10 @@
   {%- endif -%}
 {%- endmacro %}
 
+{% macro moveacc(r) -%}
+  {%- if r.move_acc is none -%}<span class="muted">–</span>
+  {%- else -%}<span title="Expected {{ r.expected_move_pct|signed }}, actual {{ r.actual_change_pct|signed }}: off by {{ '%.2f'|format(r.move_error|abs) }} pp">{{ '%.0f'|format(r.move_acc * 100) }}%</span>
+  {%- endif -%}
+{%- endmacro %}
+
 {% macro dir(d) -%}<span class="dir {{ d }}">{{ '▲ UP' if d == 'UP' else '▼ DOWN' }}</span>{%- endmacro %}

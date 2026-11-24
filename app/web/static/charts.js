@@ -219,3 +219,75 @@ async function accuracyCharts(lineCanvas, calibCanvas, horizon, days) {
     options: copts,
   });
 }
+
+// ---------- Size of the move: rolling move accuracy + predicted vs actual scatter ----------
+
+async function moveCharts(lineCanvas, scatterCanvas, horizon, days) {
+  const [series, moves] = await Promise.all([
+    fetch(apiUrl('/api/accuracy/series', { horizon, days })).then(r => r.json()),
+    fetch(apiUrl('/api/accuracy/moves', { horizon, days })).then(r => r.json()),
+  ]);
+  const empty = (c) => { c.parentElement.innerHTML = '<div class="empty">No scored predictions with an expected move yet.</div>'; };
+  if (!moves.points.length) { empty(lineCanvas); empty(scatterCanvas); return; }
+
+  // Rolling move accuracy per market, weighted by the number of calls per date.
+  const keys = ['sp500', 'europe', 'bel20'];
+  const colors = { sp500: css('--series-1'), europe: css('--series-2'), bel20: css('--series-3') };
+  const allDates = [...new Set(keys.flatMap(k => series.series[k].map(s => s.d)))].sort();
+  const win = horizon === 'daily' ? 10 : 4;
+  const datasets = keys.map(k => {
+    const byDate = Object.fromEntries(series.series[k].map(s => [s.d, s]));
+    const pts = allDates.map(d => {
+      const s = byDate[d];
+      return s && s.move_n ? { n: s.move_n, rate: s.move_acc } : { n: 0, rate: 0 };
+    });
+    return { label: series.labels[k], data: rolling(pts, win), borderColor: colors[k], backgroundColor: colors[k],
+             borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, spanGaps: true, tension: 0.2 };
+  });
+  const opts = baseOptions();
+  opts.interaction = { mode: 'index', intersect: false };
+  opts.scales.y.min = 0; opts.scales.y.max = 100;
+  opts.scales.y.ticks = { callback: (v) => v + '%' };
+  opts.plugins.tooltip.callbacks = { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y == null ? '–' : ctx.parsed.y.toFixed(1) + '%'}` };
+  new Chart(lineCanvas, { type: 'line', data: { labels: allDates, datasets }, options: opts });
+
+  // Scatter: x = predicted move, y = actual move. Symmetric axes, clipped at the 98th percentile.
+  const pts = moves.points.map(p => ({ x: p.exp, y: p.act, p }));
+  const abs = pts.flatMap(p => [Math.abs(p.x), Math.abs(p.y)]).sort((a, b) => a - b);
+  const lim = Math.max(1, Math.ceil(abs[Math.floor(abs.length * 0.98)] || 1));
+  const wrongShade = {
+    id: 'wrongShade',
+    beforeDatasetsDraw(chart) {
+      const { ctx, chartArea: a, scales: { x, y } } = chart;
+      const x0 = x.getPixelForValue(0), y0 = y.getPixelForValue(0);
+      ctx.save();
+      ctx.fillStyle = css('--bad'); ctx.globalAlpha = 0.07;
+      ctx.fillRect(x0, y0, a.right - x0, a.bottom - y0);   // predicted up, went down
+      ctx.fillRect(a.left, a.top, x0 - a.left, y0 - a.top); // predicted down, went up
+      ctx.restore();
+    },
+  };
+  const sopts = baseOptions();
+  sopts.interaction = { mode: 'nearest', intersect: true };
+  sopts.scales.x = { type: 'linear', min: -lim, max: lim, grid: { color: css('--grid') },
+                     title: { display: true, text: 'Predicted move' }, ticks: { callback: (v) => v + '%' } };
+  sopts.scales.y = { min: -lim, max: lim, grid: { color: css('--grid') }, border: { display: false },
+                     title: { display: true, text: 'Actual move' }, ticks: { callback: (v) => v + '%' } };
+  sopts.plugins.tooltip.callbacks = {
+    label: (ctx) => {
+      const p = ctx.raw.p; if (!p) return '';
+      return `${p.symbol} ${p.d}: expected ${p.exp >= 0 ? '+' : ''}${p.exp.toFixed(2)}%, actual ${p.act >= 0 ? '+' : ''}${p.act.toFixed(2)}%`;
+    },
+  };
+  new Chart(scatterCanvas, {
+    type: 'scatter',
+    data: { datasets: [
+      { label: 'Exactly right', type: 'line', data: [{ x: -lim, y: -lim }, { x: lim, y: lim }],
+        borderColor: css('--muted'), borderDash: [4, 4], borderWidth: 1, pointRadius: 0 },
+      { label: 'Calls', data: pts, backgroundColor: css('--series-1') + '66', borderWidth: 0,
+        pointRadius: pts.length > 1500 ? 2 : 3, pointHoverRadius: 6 },
+    ] },
+    options: sopts,
+    plugins: [wrongShade],
+  });
+}
